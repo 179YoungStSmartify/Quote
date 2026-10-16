@@ -1,5 +1,13 @@
 # Public repository maintenance
 
+## Mobile-first contract
+
+- Use data-driven item cards through 1024px; desktop and print show only the semantic table. Preserve all approved prices, scope and terms in both views.
+- Keep complete item names, labelled quantities, unit prices and line totals visible without sideways panning. Reflow price facts instead of shrinking monetary text or splitting amounts.
+- Preserve 44px touch targets, natural wrapping, fluid spacing and shared mobile navigation/focus behavior.
+- Test item-level bounds at 320–1024px and the desktop table at 1440px. Include portrait/landscape phone emulation, doubled computed text sizes, acceptance-placeholder wrapping, actual section scrolling, menu focus and print/PDF regressions.
+- Body-width checks alone are insufficient: inspect each label and price for clipping, overflow and off-screen positioning.
+
 This repo is deployed as a public GitHub Pages site under `/Quote/`. Every tracked source file, generated artifact, and static asset can be read by the public. Read [README.md](README.md) before editing content or deployment settings.
 
 - Keep changes and docs free of private client details and internal costing. Static hosting does not protect files.
