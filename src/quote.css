@@ -48,6 +48,7 @@
   margin-top: 20px;
 }
 .deferred p:last-child {
+  overflow-wrap: anywhere;
   font-size: 14px;
   color: var(--muted);
 }
@@ -105,6 +106,7 @@
 }
 .mobile-subtotal,
 .mobile-grand-total {
+  flex-wrap: wrap;
   display: flex;
   justify-content: space-between;
   gap: 12px;

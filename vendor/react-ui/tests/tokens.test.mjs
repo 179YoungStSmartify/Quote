@@ -30,5 +30,7 @@ test("shared layout starts narrow with fluid sizing and accessible touch targets
   assert.match(css, /@media \(min-width: 901px\)/);
   assert.match(css, /min-height: 44px/);
   assert.doesNotMatch(css, /min-width: 320px/);
+  assert.match(css, /DM Sans Variable/);
+  assert.match(css, /Playfair Display Variable/);
   assert.match(css, /env\(safe-area-inset-top\)/);
 });

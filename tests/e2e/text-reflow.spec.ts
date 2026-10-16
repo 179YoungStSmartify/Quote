@@ -31,6 +31,43 @@ test("phone item text and money remain fully visible with 200 percent text enlar
     defects,
     "no clipped or overflowing item labels or monetary values at twice their normal font size",
   ).toEqual([]);
+  const overflowDetails = await page.locator("body *").evaluateAll((elements) =>
+    elements
+      .filter((element) => {
+        const rect = element.getBoundingClientRect();
+        return (
+          rect.width > 0 &&
+          rect.right > innerWidth + 1 &&
+          getComputedStyle(element).position !== "absolute"
+        );
+      })
+      .map((element) => ({
+        tag: element.tagName,
+        cls: element.className,
+        text: element.textContent?.slice(0, 80),
+        right: element.getBoundingClientRect().right,
+      })),
+  );
+  const overflowText = await page
+    .locator("body *")
+    .evaluateAll((elements) =>
+      elements
+        .filter(
+          (element) =>
+            element.clientWidth > 0 &&
+            element.scrollWidth > element.clientWidth + 1 &&
+            getComputedStyle(element).overflowX === "visible",
+        )
+        .map((element) => ({
+          tag: element.tagName,
+          cls: element.className,
+          text: element.textContent?.slice(0, 100),
+          width: element.clientWidth,
+          content: element.scrollWidth,
+        })),
+    );
+  expect(overflowText).toEqual([]);
+  expect(overflowDetails).toEqual([]);
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,

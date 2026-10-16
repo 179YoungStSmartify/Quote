@@ -1,7 +1,7 @@
 @import "@fontsource-variable/dm-sans";
 @import "@fontsource-variable/playfair-display";
 :root {
-  font-family: "DM Sans", system-ui, sans-serif;
+  font-family: "DM Sans Variable", system-ui, sans-serif;
   color: #24211c;
   background: #f6f3ed;
   font-synthesis: none;
@@ -14,7 +14,7 @@
   --gold: #d5ae68;
   --line: #ded8cb;
   --dark: #211f1b;
-  --serif: "Playfair Display", Georgia, serif;
+  --serif: "Playfair Display Variable", Georgia, serif;
   --radius: 14px;
 }
 * {
@@ -52,6 +52,7 @@ a:focus-visible {
   padding: 0 clamp(12px, 4vw, 28px) 48px;
 }
 .topbar {
+  flex-wrap: wrap;
   position: relative;
   left: 50%;
   transform: translateX(-50%);
@@ -66,6 +67,9 @@ a:focus-visible {
   gap: 20px;
 }
 .brand {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
   display: flex;
   align-items: center;
   min-height: 44px;
