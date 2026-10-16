@@ -22,7 +22,7 @@ describe("Hazal quote", () => {
     expect(items.find((x) => x.name.startsWith("10"))?.quantity).toBe(2);
     expect(items.find((x) => x.name.startsWith("4"))?.quantity).toBe(2);
     expect(quote.quoteId).toBe("PL-HZL-179YS-0001-v1");
-    expect(quote.preparedFor).toBe("Hazal, QC Realty");
+    expect(quote.preparedFor).toBe("Hazal");
     expect(quote.validUntil).toBe("15/11/2026");
     expect(quote.quoteDate).toBe("16/10/2026");
   });

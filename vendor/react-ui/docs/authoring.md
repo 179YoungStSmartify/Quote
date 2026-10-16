@@ -13,6 +13,8 @@ Keep project-specific page content and business rules in the consuming app. Add 
 
 Use native headings, landmarks, links, buttons, and tables; add accessible names to controls and regions. Keep the skip link, focus-visible outline, dialog keyboard behavior, and responsive navigation intact. Review consuming apps at 320px and wider, with keyboard-only navigation and screen-reader landmarks. Check both screen and print output after changing shared CSS. There is no component storybook or UI dev script in this repository; preview changes in a consuming app.
 
+`Shell` includes the 480px back-to-top control and restores focus to the main landmark before scrolling. `Section` adds its entrance only after an intersection is observed; unobserved content stays readable, and reduced motion disables entrances and smooth scrolling. The control is hidden in print, with touch-safe sizing and safe-area offsets.
+
 ## Snapshot maintenance
 
 Run from the `react-ui` checkout, substituting the app target as needed:
