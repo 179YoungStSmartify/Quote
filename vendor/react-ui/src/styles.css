@@ -1,7 +1,7 @@
 @import "@fontsource-variable/dm-sans";
 @import "@fontsource-variable/playfair-display";
 :root {
-  font-family: "DM Sans", system-ui, sans-serif;
+  font-family: "DM Sans Variable", system-ui, sans-serif;
   color: #24211c;
   background: #f6f3ed;
   font-synthesis: none;
@@ -14,7 +14,7 @@
   --gold: #d5ae68;
   --line: #ded8cb;
   --dark: #211f1b;
-  --serif: "Playfair Display", Georgia, serif;
+  --serif: "Playfair Display Variable", Georgia, serif;
   --radius: 14px;
 }
 * {
@@ -30,7 +30,6 @@ html {
 }
 body {
   margin: 0;
-  min-width: 320px;
   font-size: 16px;
   line-height: 1.55;
 }
@@ -50,9 +49,10 @@ a:focus-visible {
 .shell {
   max-width: 1120px;
   margin: auto;
-  padding: 0 28px 64px;
+  padding: 0 clamp(12px, 4vw, 28px) 48px;
 }
 .topbar {
+  flex-wrap: wrap;
   position: relative;
   left: 50%;
   transform: translateX(-50%);
@@ -60,15 +60,19 @@ a:focus-visible {
   margin: 0;
   background: var(--dark);
   color: #f5f0e7;
-  padding: 18px max(28px, calc((100vw - 1064px) / 2));
+  padding: 12px clamp(12px, 4vw, 28px);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
 }
 .brand {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
   display: flex;
   align-items: center;
+  min-height: 44px;
   gap: 12px;
   color: inherit;
   text-decoration: none;
@@ -85,23 +89,27 @@ a:focus-visible {
   letter-spacing: 0.14em;
 }
 .nav {
-  display: flex;
+  display: none;
   align-items: center;
-  gap: 24px;
+  gap: 12px;
 }
 .nav a {
   color: #f5f0e7;
   text-decoration: none;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
   font-size: 14px;
 }
 .hero {
   background: var(--dark);
   color: #f5f0e7;
   border-radius: 20px;
-  padding: 56px;
-  margin: 28px 0 36px;
+  padding: clamp(22px, 5vw, 48px);
+  margin: 16px 0 28px;
   position: relative;
   overflow: hidden;
+  overflow-wrap: break-word;
 }
 .hero:after {
   content: "";
@@ -151,14 +159,14 @@ a:focus-visible {
 }
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 18px;
 }
 .card {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 24px;
+  padding: clamp(16px, 3vw, 24px);
   box-shadow: 0 7px 22px #34281908;
 }
 .card h2,
@@ -177,7 +185,8 @@ a:focus-visible {
   justify-content: center;
   align-items: center;
   gap: 8px;
-  padding: 11px 17px;
+  min-height: 44px;
+  padding: 10px 16px;
   border-radius: 6px;
   border: 1px solid transparent;
   background: var(--bronze);
@@ -196,13 +205,15 @@ a:focus-visible {
   color: var(--dark);
 }
 .actions {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 10px;
   flex-wrap: wrap;
   margin: 24px 0;
 }
 .meta {
   display: flex;
+  overflow-wrap: anywhere;
   gap: 18px;
   flex-wrap: wrap;
   color: #aaa293;
@@ -289,52 +300,26 @@ th.num {
   padding: 10px;
   z-index: 10;
 }
-@media (max-width: 720px) {
+@media (min-width: 901px) {
   .shell {
-    padding: 0 16px 40px;
+    padding: 0 28px 64px;
   }
   .topbar {
-    padding: 14px 16px;
-  }
-  .nav {
-    gap: 12px;
-  }
-  .nav a {
-    font-size: 12px;
+    padding: 18px max(28px, calc((100vw - 1064px) / 2));
   }
   .hero {
-    padding: 36px 26px;
-    margin: 16px 0 28px;
+    padding: 48px;
+    margin: 28px 0 36px;
   }
   .grid {
-    grid-template-columns: 1fr;
-  }
-  .meta {
-    gap: 10px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
   }
   .page-title {
-    margin-top: 30px;
+    margin-top: 42px;
   }
-}
-@media (max-width: 440px) {
-  .nav {
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    width: 100%;
-  }
-  .brand small {
-    display: none;
-  }
-  .topbar {
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  .hero h1 {
-    font-size: 2.35rem;
-  }
-  .card {
-    padding: 19px;
+  .actions {
+    display: flex;
   }
 }
 .hero .button.secondary {
@@ -343,11 +328,14 @@ th.num {
   background: transparent;
 }
 .menu-trigger {
-  display: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: transparent;
   color: #f5f0e7;
   border: 1px solid #70654e;
   border-radius: 6px;
+  min-height: 44px;
   padding: 8px 12px;
 }
 .mobile-overlay {
@@ -362,7 +350,10 @@ th.num {
   z-index: 6;
   inset: 0 0 0 auto;
   width: min(320px, 86vw);
-  padding: 28px 24px;
+  max-height: 100dvh;
+  overflow-y: auto;
+  padding: max(20px, env(safe-area-inset-top)) 24px
+    max(20px, env(safe-area-inset-bottom));
   background: var(--surface);
   box-shadow: -12px 0 40px #0002;
   display: flex;
@@ -378,6 +369,7 @@ th.num {
   gap: 8px;
 }
 .mobile-panel nav a {
+  min-height: 44px;
   padding: 12px 10px;
   border-bottom: 1px solid var(--line);
   text-decoration: none;
@@ -388,20 +380,19 @@ th.num {
   background: transparent;
   border: 1px solid var(--line);
   border-radius: 6px;
+  min-height: 44px;
   padding: 10px;
 }
 .mobile-panel :focus-visible {
   outline: 3px solid var(--gold);
   outline-offset: 2px;
 }
-@media (max-width: 720px) {
+@media (min-width: 721px) {
   .nav {
-    display: none;
+    display: flex;
   }
   .menu-trigger {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    display: none;
   }
 }
 @media print {

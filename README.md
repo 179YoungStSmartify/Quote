@@ -54,3 +54,7 @@ node scripts/sync-snapshot.mjs . ../Quote/vendor/react-ui --source-sha "$(git re
 Then run `npm ci` in this repository, inspect the snapshot and provenance diff, and run the checks above. Do not independently edit vendored source files.
 
 See [AGENTS.md](AGENTS.md) for public-safe maintenance instructions.
+
+## Mobile item layout
+
+The quote uses stacked item cards through 1024px and the original semantic table on desktop and paper. Both views derive from `src/quote.json` and show the same interim/gross subtotals, discounts, section totals, and grand total. Item names wrap while currency amounts stay intact. Validate 320, 360, 375, 390, 430, 768, 1024, and 1440px in portrait and landscape, with enlarged text, minimum 44px touch targets, and no sideways panning for essential quote details.

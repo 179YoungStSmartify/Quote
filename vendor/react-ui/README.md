@@ -49,3 +49,7 @@ node scripts/sync-snapshot.mjs . ../react-proposal-template/vendor/react-ui --so
 For the quote template, replace the target with `../react-quote-template/vendor/react-ui`. The script clears and repopulates the target, excluding `node_modules`, `dist`, and `.git`, then writes `SNAPSHOT-PROVENANCE.md`. Review the target diff, run the app's checks from its directory, and keep the provenance revision aligned with the synced source. The target argument must be the desired `vendor/react-ui` directory.
 
 See [docs/authoring.md](docs/authoring.md) for maintenance, accessibility, and snapshot workflow details. Third-party notices are in [LICENSES.md](LICENSES.md); the design reference is `179YoungStSmartify/react-project-proposal` at revision `bf0b54f4db264f17318da75ad7fc1f1049f1caf9`. Consumer snapshots contain their own generated `SNAPSHOT-PROVENANCE.md` tied to the library commit.
+
+## Mobile-first layout contract
+
+The shared stylesheet starts with a single-column, fluid layout and adds two-column cards from 901px. Keep words and currency values intact, allow long metadata to wrap, and keep buttons, menu controls, and navigation links at least 44px high. Browser checks should cover 320, 360, 375, 390, 430, 768, 1024, and 1440px, portrait and landscape, text enlargement, keyboard dialog focus, and no clipped or horizontally hidden key content.

@@ -48,31 +48,122 @@
   margin-top: 20px;
 }
 .deferred p:last-child {
+  overflow-wrap: anywhere;
   font-size: 14px;
   color: var(--muted);
 }
-@media (max-width: 560px) {
+/* Phone-first item cards keep every price visible without sideways panning. */
+.mobile-items {
+  display: block;
+}
+.table-wrap {
+  display: none;
+}
+.mobile-quote-section {
+  margin: 14px 0;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.mobile-quote-section h3 {
+  margin: 0 0 10px;
+  font: 600 18px/1.3 var(--serif);
+}
+.mobile-item {
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+.mobile-item h4 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.mobile-item dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+  gap: 8px;
+  margin: 0;
+}
+.mobile-item dl div {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0 12px;
+}
+.mobile-item dt {
+  color: var(--muted);
+  font-size: 12px;
+}
+.mobile-item dd {
+  margin: 2px 0 0 auto;
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.mobile-subtotal,
+.mobile-grand-total {
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 8px 0 0;
+  padding: 10px 0 0;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+}
+.mobile-grand-total {
+  padding: 14px;
+  background: #eee4d2;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 8px;
+}
+@media (min-width: 1025px) {
+  .mobile-items {
+    display: none;
+  }
   .table-wrap {
-    margin: 0 -4px;
-  }
-  table {
-    min-width: 570px;
-  }
-  .overview {
-    gap: 12px;
-  }
-  .overview .card {
-    padding: 16px;
+    display: block;
   }
 }
 
 @media print {
-  html, body { background: white !important; }
-  .section, .table-wrap { break-inside: auto; }
-  .table-wrap { overflow: visible; }
-  tr, .card, .hero, .overview { break-inside: avoid; }
-  h2, h3 { break-after: avoid; }
-  tfoot { display: table-row-group; }
-  .section { padding-bottom: 12px; }
-  .overview { margin-bottom: 12px; }
+  html,
+  body {
+    background: white !important;
+  }
+  .section,
+  .table-wrap {
+    break-inside: auto;
+  }
+  .table-wrap {
+    display: block;
+    overflow: visible;
+  }
+  .mobile-items {
+    display: none !important;
+  }
+  tr,
+  .card,
+  .hero,
+  .overview {
+    break-inside: avoid;
+  }
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+  tfoot {
+    display: table-row-group;
+  }
+  .section {
+    padding-bottom: 12px;
+  }
+  .overview {
+    margin-bottom: 12px;
+  }
 }
