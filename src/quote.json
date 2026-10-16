@@ -1,0 +1,127 @@
+{
+  "currency": "AUD",
+  "quoteId": "PL-HZL-179YS-0001-v1",
+  "preparedFor": "Hazal, QC Realty",
+  "site": "179 Young St, Sunnybank QLD 4109",
+  "quoteDate": "16/10/2026",
+  "validUntil": "15/11/2026",
+  "preparedBy": "Perspective Living",
+  "scopeIntroduction": "Five displays: one large, two medium and two small. Smart home and network are itemised separately.",
+  "sections": [
+    {
+      "id": "smart-home",
+      "title": "A — Smart home",
+      "items": [
+        {
+          "name": "SmartHome Server package (smart home controller with Zigbee/Thread radio)",
+          "quantity": 1,
+          "unitCents": 59900
+        },
+        {
+          "name": "Smart light switch (physical button, smart function)",
+          "quantity": 30,
+          "unitCents": 18000
+        },
+        {
+          "name": "15.6\" wall-mounted display",
+          "quantity": 1,
+          "unitCents": 84900
+        },
+        {
+          "name": "10\" wall-mounted display",
+          "quantity": 2,
+          "unitCents": 74900
+        },
+        {
+          "name": "4\" in-wall display (light switch retrofit)",
+          "quantity": 2,
+          "unitCents": 29900
+        },
+        {
+          "name": "Presence sensor",
+          "quantity": 4,
+          "unitCents": 19900
+        },
+        {
+          "name": "Door sensor",
+          "quantity": 4,
+          "unitCents": 6900
+        },
+        {
+          "name": "Installation, configuration and programming (hours)",
+          "quantity": 50,
+          "unitCents": 18000
+        }
+      ],
+      "interimSubtotal": {
+        "afterItemCount": 7,
+        "label": "Hardware subtotal",
+        "amountCents": 1001600
+      },
+      "discount": {
+        "label": "Special discount — 20 hours installation free",
+        "quantity": 20,
+        "unitCents": -18000
+      },
+      "grossSubtotal": {
+        "label": "Section A subtotal",
+        "amountCents": 1901600
+      },
+      "finalLabel": "Section A total"
+    },
+    {
+      "id": "network",
+      "title": "B — Network",
+      "items": [
+        {
+          "name": "UniFi Cloud Gateway Ultra (UCG-Ultra)",
+          "quantity": 1,
+          "unitCents": 20790
+        },
+        {
+          "name": "UniFi U7 Lite Wi-Fi 7 ceiling access point (U7-Lite)",
+          "quantity": 4,
+          "unitCents": 19690
+        },
+        {
+          "name": "UniFi Switch Ultra 60W, 8-port PoE (USW-Ultra-60W)",
+          "quantity": 1,
+          "unitCents": 28050
+        }
+      ],
+      "discount": null,
+      "interimSubtotal": null,
+      "grossSubtotal": null,
+      "finalLabel": "Section B total"
+    }
+  ],
+  "inclusions": {
+    "dashboards": [
+      "15.6\" and 10\" displays: 1 main dashboard (at-a-glance view of the home); NeoPlan3D interactive 3D floor plan, on the 15.6\" display; 1 area-based dashboard.",
+      "4\" displays: 1 Home Assistant dashboard for that display's area; 1 scene control dashboard.",
+      "Mobile: 1 mobile dashboard per account/person."
+    ],
+    "integrations": [
+      "Air conditioning",
+      "Voice assistant with Chinese spoken-language understanding",
+      "Garage gate",
+      "Xiaomi smart home devices (best effort)",
+      "Smart blinds (best effort)",
+      "Client network and separate IoT network setup"
+    ],
+    "automations": [
+      "10 automations, including: Away scene — lights turn on and off at random when no one is home; I'm home / I'm leaving scenes; Movie scene; Night-time sentry mode."
+    ]
+  },
+  "terms": [
+    "This quote includes up to 50 hours of installation and setup. Any work beyond 50 hours is charged separately at $180.00 per hour.",
+    "Integrations marked 'best effort' depend on the device and manufacturer supporting Home Assistant. If a device can't be integrated reliably, it is not charged as extra hours.",
+    "Home Assistant remote access and cloud backup run on a Nabu Casa subscription, paid by the client directly.",
+    "The network (Section B) is priced separately and can be accepted on its own.",
+    "Prices are valid for 30 days. Hardware prices may change if the supplier's prices change before order."
+  ],
+  "hyperCare": "60 days of support and bug fixes within agreed scope for the system as delivered; no feature additions.",
+  "warranty": "2 years, hardware only. Installation work and recoding require a separate quote.",
+  "signing": "Signing integration deferred. Acceptance lines are informational; no signing has occurred.",
+  "discountSummary": "You save"
+}
