@@ -166,6 +166,87 @@ export default function App() {
             </tfoot>
           </table>
         </div>
+        <div
+          className="mobile-items"
+          data-testid="mobile-quote-items"
+          aria-label="Itemised quote"
+        >
+          {q.sections.map((s) => (
+            <section
+              className="mobile-quote-section"
+              key={s.id}
+              aria-label={s.title}
+            >
+              <h3>{s.title}</h3>
+              {s.items.map((x, i) => (
+                <Fragment key={x.name}>
+                  {s.interimSubtotal?.afterItemCount === i && (
+                    <p className="mobile-subtotal">
+                      <span>{s.interimSubtotal.label}</span>
+                      <strong>{cents(s.interimSubtotal.amountCents)}</strong>
+                    </p>
+                  )}
+                  <article className="mobile-item">
+                    <h4>{x.name}</h4>
+                    <dl>
+                      <div>
+                        <dt>Quantity</dt>
+                        <dd>{x.quantity}</dd>
+                      </div>
+                      <div>
+                        <dt>Unit price</dt>
+                        <dd>{cents(x.unitCents)}</dd>
+                      </div>
+                      <div>
+                        <dt>Line total</dt>
+                        <dd>{cents(line(x))}</dd>
+                      </div>
+                    </dl>
+                  </article>
+                </Fragment>
+              ))}
+              {s.interimSubtotal?.afterItemCount === s.items.length && (
+                <p className="mobile-subtotal">
+                  <span>{s.interimSubtotal.label}</span>
+                  <strong>{cents(s.interimSubtotal.amountCents)}</strong>
+                </p>
+              )}
+              {s.grossSubtotal && (
+                <p className="mobile-subtotal">
+                  <span>{s.grossSubtotal.label}</span>
+                  <strong>{cents(s.grossSubtotal.amountCents)}</strong>
+                </p>
+              )}
+              {s.discount && (
+                <article className="mobile-item">
+                  <h4>{s.discount.label}</h4>
+                  <dl>
+                    <div>
+                      <dt>Quantity</dt>
+                      <dd>{s.discount.quantity}</dd>
+                    </div>
+                    <div>
+                      <dt>Unit price</dt>
+                      <dd>{cents(s.discount.unitCents)}</dd>
+                    </div>
+                    <div>
+                      <dt>Line total</dt>
+                      <dd>{cents(line(s.discount))}</dd>
+                    </div>
+                  </dl>
+                </article>
+              )}
+              <p className="mobile-subtotal">
+                <span>{s.finalLabel || `${s.title} subtotal`}</span>
+                <strong>{cents(sectionTotal(s))}</strong>
+              </p>
+            </section>
+          ))}
+          <p className="mobile-grand-total">
+            <span>Total</span>
+            <strong>{cents(total)}</strong>
+          </p>
+        </div>
         <p className="currency-note">All amounts are in AUD.</p>
         <p className="saving">
           {q.discountSummary}: {cents(discount)}
