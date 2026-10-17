@@ -65,7 +65,7 @@ export default function App() {
                   <dd>{cents(sectionTotal(section))}</dd>
                 </div>
               ))}
-              <div>
+              <div className="discount-summary">
                 <dt>{q.discountSummary}</dt>
                 <dd>{cents(discount)}</dd>
               </div>
@@ -188,20 +188,33 @@ export default function App() {
                   )}
                   <article className="mobile-item">
                     <h4>{x.name}</h4>
-                    <dl>
-                      <div>
-                        <dt>Quantity</dt>
-                        <dd>{x.quantity}</dd>
-                      </div>
-                      <div>
-                        <dt>Unit price</dt>
-                        <dd>{cents(x.unitCents)}</dd>
-                      </div>
-                      <div>
-                        <dt>Line total</dt>
-                        <dd>{cents(line(x))}</dd>
-                      </div>
-                    </dl>
+                    <div className="mobile-item-facts">
+                      <dl className="mobile-item-meta">
+                        <div
+                          data-fact="quantity"
+                          className="mobile-fact mobile-fact--quantity"
+                        >
+                          <dt>Quantity</dt>
+                          <dd>{x.quantity}</dd>
+                        </div>
+                        <div
+                          data-fact="unit-price"
+                          className="mobile-fact mobile-fact--unit"
+                        >
+                          <dt>Unit price</dt>
+                          <dd>{cents(x.unitCents)}</dd>
+                        </div>
+                      </dl>
+                      <dl className="mobile-item-total">
+                        <div
+                          data-fact="line-total"
+                          className="mobile-fact mobile-fact--total"
+                        >
+                          <dt>Line total</dt>
+                          <dd>{cents(line(x))}</dd>
+                        </div>
+                      </dl>
+                    </div>
                   </article>
                 </Fragment>
               ))}
@@ -218,22 +231,35 @@ export default function App() {
                 </p>
               )}
               {s.discount && (
-                <article className="mobile-item">
+                <article className="mobile-item mobile-item--discount">
                   <h4>{s.discount.label}</h4>
-                  <dl>
-                    <div>
-                      <dt>Quantity</dt>
-                      <dd>{s.discount.quantity}</dd>
-                    </div>
-                    <div>
-                      <dt>Unit price</dt>
-                      <dd>{cents(s.discount.unitCents)}</dd>
-                    </div>
-                    <div>
-                      <dt>Line total</dt>
-                      <dd>{cents(line(s.discount))}</dd>
-                    </div>
-                  </dl>
+                  <div className="mobile-item-facts">
+                    <dl className="mobile-item-meta">
+                      <div
+                        data-fact="quantity"
+                        className="mobile-fact mobile-fact--quantity"
+                      >
+                        <dt>Quantity</dt>
+                        <dd>{s.discount.quantity}</dd>
+                      </div>
+                      <div
+                        data-fact="unit-price"
+                        className="mobile-fact mobile-fact--unit"
+                      >
+                        <dt>Unit price</dt>
+                        <dd>{cents(s.discount.unitCents)}</dd>
+                      </div>
+                    </dl>
+                    <dl className="mobile-item-total">
+                      <div
+                        data-fact="line-total"
+                        className="mobile-fact mobile-fact--total"
+                      >
+                        <dt>Line total</dt>
+                        <dd>{cents(line(s.discount))}</dd>
+                      </div>
+                    </dl>
+                  </div>
                 </article>
               )}
               <p className="mobile-subtotal">

@@ -42,6 +42,57 @@ test("all item quantities and prices are visible without sideways panning", asyn
         money(expected[index].unitCents),
         money(expected[index].unitCents * expected[index].quantity),
       ]);
+      const quantity = item.locator('[data-fact="quantity"]');
+      const unit = item.locator('[data-fact="unit-price"]');
+      const lineTotal = item.locator('[data-fact="line-total"]');
+      await expect(quantity.locator("dt")).toHaveText("Quantity");
+      await expect(unit.locator("dt")).toHaveText("Unit price");
+      await expect(lineTotal.locator("dt")).toHaveText("Line total");
+      const hierarchy = await item.evaluate((element) => {
+        const unitAmount = element.querySelector(
+          '[data-fact="unit-price"] dd',
+        )!;
+        const totalAmount = element.querySelector(
+          '[data-fact="line-total"] dd',
+        )!;
+        const totalBox = totalAmount.getBoundingClientRect();
+        const cardBox = element.getBoundingClientRect();
+        return {
+          unitFont: parseFloat(getComputedStyle(unitAmount).fontSize),
+          totalFont: parseFloat(getComputedStyle(totalAmount).fontSize),
+          unitWeight: parseInt(getComputedStyle(unitAmount).fontWeight, 10),
+          totalWeight: parseInt(getComputedStyle(totalAmount).fontWeight, 10),
+          totalRight: totalBox.right,
+          totalTop: totalBox.top,
+          unitBottom: unitAmount.getBoundingClientRect().bottom,
+          contentRight:
+            cardBox.right - parseFloat(getComputedStyle(element).paddingRight),
+          card: [cardBox.left, cardBox.right],
+          total: [totalBox.left, totalBox.right],
+          dl: (() => {
+            const box = element.querySelector("dl")!.getBoundingClientRect();
+            return [box.left, box.right];
+          })(),
+        };
+      });
+      if (width <= 430) {
+        expect(
+          hierarchy.totalTop,
+          "normal phone layout puts the total beside secondary metadata, not below it",
+        ).toBeLessThanOrEqual(hierarchy.unitBottom);
+      }
+      expect(
+        hierarchy.totalFont,
+        `line total emphasis at ${width}px`,
+      ).toBeGreaterThan(hierarchy.unitFont);
+      expect(
+        hierarchy.totalWeight,
+        `line total weight at ${width}px`,
+      ).toBeGreaterThanOrEqual(hierarchy.unitWeight);
+      expect(
+        Math.abs(hierarchy.contentRight - hierarchy.totalRight),
+        `line total right edge at ${width}px: ${JSON.stringify(hierarchy)}`,
+      ).toBeLessThanOrEqual(1.5);
     }
     const overflow = await page
       .locator(".mobile-item h4, .mobile-item dt, .mobile-item dd")
@@ -59,7 +110,37 @@ test("all item quantities and prices are visible without sideways panning", asyn
       );
     expect(overflow, `item content must fit at ${width}px`).toEqual([]);
   }
+  const discountCard = page
+    .getByTestId("mobile-quote-items")
+    .locator(".mobile-item--discount");
+  await expect(discountCard).toHaveCount(
+    quote.sections.filter((section) => section.discount).length,
+  );
+  await expect(discountCard.locator("h4")).toContainText(/discount/i);
+  const mobileColors = await discountCard.first().evaluate((element) => ({
+    discount: getComputedStyle(element).backgroundColor,
+    ordinary: getComputedStyle(
+      element.parentElement!.querySelector(
+        ".mobile-item:not(.mobile-item--discount)",
+      )!,
+    ).backgroundColor,
+  }));
+  expect(mobileColors.discount).not.toBe(mobileColors.ordinary);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const tableColors = await page
+    .locator("tr.discount")
+    .first()
+    .evaluate((element) => ({
+      discount: getComputedStyle(element).backgroundColor,
+      ordinary: getComputedStyle(
+        element.parentElement!.querySelector("tr:not(.group):not(.discount)")!,
+      ).backgroundColor,
+    }));
+  expect(tableColors.discount).not.toBe(tableColors.ordinary);
+  await expect(page.locator(".saving")).toHaveCSS("background-color", /rgb\(/);
   await page.emulateMedia({ media: "print" });
   await expect(page.getByTestId("mobile-quote-items")).toBeHidden();
   await expect(page.getByRole("table")).toHaveCount(1);
+  await expect(page.locator("tr.discount")).toBeVisible();
+  await expect(page.locator("tr.discount")).toContainText(/discount/i);
 });

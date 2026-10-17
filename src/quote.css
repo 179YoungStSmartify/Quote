@@ -29,7 +29,18 @@
   color: var(--muted);
 }
 .discount {
-  color: #674c20;
+  color: #304638;
+  background: #e8eee7;
+  border-top: 1px solid #b8c9b8;
+  border-bottom: 1px solid #b8c9b8;
+}
+.discount-summary {
+  margin: 6px 0 0;
+  padding: 8px;
+  color: #304638;
+  background: #e8eee7;
+  border: 1px solid #b8c9b8;
+  border-radius: 6px;
 }
 .currency-note {
   margin: 14px 0 0;
@@ -37,8 +48,12 @@
   font-size: 13px;
 }
 .saving {
-  margin-top: 5px;
-  color: #674c20;
+  margin-top: 12px;
+  padding: 10px 12px;
+  color: #304638;
+  background: #e8eee7;
+  border: 1px solid #b8c9b8;
+  border-radius: 8px;
   font-weight: 600;
 }
 .terms {
@@ -80,29 +95,69 @@
   line-height: 1.4;
   overflow-wrap: anywhere;
 }
-.mobile-item dl {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
-  gap: 8px;
-  margin: 0;
+.mobile-item-facts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
-.mobile-item dl div {
+.mobile-item dl {
+  margin: 0;
+  min-width: 0;
+  max-width: 100%;
+}
+.mobile-item .mobile-item-meta {
+  flex: 1 1 6rem;
+  display: grid;
+  gap: 6px;
+}
+.mobile-item .mobile-item-total {
+  flex: 0 1 auto;
+  margin-inline-start: auto;
+}
+.mobile-item .mobile-fact {
   min-width: 0;
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 0 12px;
+  gap: 0 6px;
+}
+.mobile-item .mobile-fact--total {
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
 }
 .mobile-item dt {
   color: var(--muted);
   font-size: 12px;
 }
 .mobile-item dd {
-  margin: 2px 0 0 auto;
-  font-weight: 600;
+  margin: 0;
+  color: var(--muted);
+  font-weight: 500;
   font-size: 14px;
   white-space: nowrap;
+}
+.mobile-item .mobile-fact--total dd {
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 700;
+}
+.mobile-item--discount {
+  margin-top: 6px;
+  padding: 12px;
+  color: #304638;
+  background: #e8eee7;
+  border: 1px solid #b8c9b8;
+  border-radius: 8px;
+}
+.mobile-item--discount h4 {
+  color: inherit;
+}
+.mobile-item--discount dt,
+.mobile-item--discount dd {
+  color: inherit;
 }
 .mobile-subtotal,
 .mobile-grand-total {
@@ -162,6 +217,13 @@
   }
   .section {
     padding-bottom: 12px;
+  }
+  .discount,
+  .discount-summary,
+  .saving {
+    border-color: #555;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
   .overview {
     margin-bottom: 12px;
