@@ -30,6 +30,11 @@ test("print suppresses an already-open mobile portal", async ({ page }) => {
   await page.goto("./");
   await page.getByRole("button", { name: "Open navigation" }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
+  await page.keyboard.press("Tab");
+  const link = page.locator(".mobile-panel nav a").first();
+  await link.focus();
+  await expect(link).toHaveCSS("outline-color", "rgb(109, 81, 39)");
+  await expect(link).toHaveCSS("outline-width", "3px");
   await page.emulateMedia({ media: "print" });
   await expect(page.locator(".mobile-panel")).toBeHidden();
   await expect(page.locator(".mobile-overlay")).toBeHidden();

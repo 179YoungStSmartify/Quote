@@ -479,7 +479,7 @@ th.num {
   padding: 10px;
 }
 .mobile-panel :focus-visible {
-  outline: 3px solid var(--gold);
+  outline: 3px solid var(--bronze-text);
   outline-offset: 2px;
 }
 @media (min-width: 721px) {
