@@ -7,6 +7,22 @@ const links = [
 ];
 export function Shell({ children }: { children: React.ReactNode }) {
   const navigationTarget = React.useRef<string | null>(null);
+  const [showBackToTop, setShowBackToTop] = React.useState(false);
+  React.useEffect(() => {
+    const update = () => {
+      const visible = window.scrollY > 480;
+      if (
+        !visible &&
+        document.activeElement?.classList.contains("back-to-top")
+      ) {
+        document.getElementById("main")?.focus({ preventScroll: true });
+      }
+      setShowBackToTop(visible);
+    };
+    window.addEventListener("scroll", update, { passive: true });
+    update();
+    return () => window.removeEventListener("scroll", update);
+  }, []);
   return (
     <>
       <a className="skip-link" href="#main">
@@ -79,9 +95,12 @@ export function Shell({ children }: { children: React.ReactNode }) {
         </Dialog.Root>
       </header>
       <div className="shell" id="top">
-        <main id="main">{children}</main>
+        <main id="main" tabIndex={-1}>
+          {children}
+        </main>
         <footer className="footer">Thoughtfully connected living.</footer>
       </div>
+      <BackToTop visible={showBackToTop} />
     </>
   );
 }
@@ -94,11 +113,69 @@ export function Section({
   title: string;
   children: React.ReactNode;
 }) {
+  const sectionRef = React.useRef<HTMLElement>(null);
+  const [entered, setEntered] = React.useState(false);
+  React.useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let observer: IntersectionObserver | undefined;
+    const syncMotion = () => {
+      observer?.disconnect();
+      observer = undefined;
+      if (motion.matches || !("IntersectionObserver" in window)) return;
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setEntered(true);
+            observer?.disconnect();
+            observer = undefined;
+          }
+        },
+        { threshold: 0.08 },
+      );
+      observer.observe(section);
+    };
+    syncMotion();
+    motion.addEventListener("change", syncMotion);
+    return () => {
+      motion.removeEventListener("change", syncMotion);
+      observer?.disconnect();
+    };
+  }, []);
   return (
-    <section className="section" id={id}>
+    <section
+      ref={sectionRef}
+      className={`section${entered ? " section-entered" : ""}`}
+      id={id}
+    >
       <h2>{title}</h2>
       {children}
     </section>
+  );
+}
+
+export function BackToTop({ visible }: { visible: boolean }) {
+  return (
+    <button
+      className="back-to-top"
+      type="button"
+      aria-label="Back to top"
+      aria-hidden={!visible}
+      tabIndex={visible ? 0 : -1}
+      onClick={() => {
+        document.getElementById("main")?.focus({ preventScroll: true });
+        window.scrollTo({
+          top: 0,
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
+            .matches
+            ? "instant"
+            : "smooth",
+        });
+      }}
+    >
+      ↑ Top
+    </button>
   );
 }
 export function Card({

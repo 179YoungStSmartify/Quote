@@ -18,7 +18,7 @@ npm run build
 
 ## Package API
 
-The package root exports `Shell`, `Section`, `Card`, `Badge`, `Button`, and `TableFrame` from `src/index.tsx`. Import the stylesheet once from the app entry point:
+The package root exports `Shell`, `Section`, `Card`, `Badge`, `Button`, `BackToTop`, and `TableFrame` from `src/index.tsx`. `Shell` mounts `BackToTop` once by default; the named component also accepts a required `visible` boolean when used directly. Import the stylesheet once from the app entry point:
 
 ```tsx
 import { Card, Section, Shell, Button, TableFrame } from '@perspective-living/react-ui';
@@ -32,7 +32,7 @@ export function Example() {
 }
 ```
 
-`Section` takes `id`, `title`, and `children`; `Card` takes `children` and optional `className`; `Badge` takes `children`; `Button` takes `children`, optional `variant` (`primary`, `secondary`, or `light`), and native button attributes; `TableFrame` takes `label` and `children`. `Shell` provides the site header, mobile navigation dialog, skip link, main landmark, and footer. Component source is intentionally small and uses semantic elements.
+`Section` takes `id`, `title`, and `children`; `Card` takes `children` and optional `className`; `Badge` takes `children`; `Button` takes `children`, optional `variant` (`primary`, `secondary`, or `light`), and native button attributes; `BackToTop` takes `visible`; `TableFrame` takes `label` and `children`. `Shell` provides the site header, mobile navigation dialog, skip link, main landmark, footer, and back-to-top control. That control appears after scrolling beyond 480px, returns focus to the main landmark, scrolls smoothly unless reduced motion is preferred, and is removed from print output. Sections reveal with a brief entrance after entering view; content remains visible if observation is unavailable, and reduced-motion preferences disable the animation. Card and button feedback is limited to fine-pointer hover devices.
 
 ## Tokens and styling
 

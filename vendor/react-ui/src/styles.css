@@ -49,7 +49,7 @@ a:focus-visible {
 .shell {
   max-width: 1120px;
   margin: auto;
-  padding: 0 clamp(12px, 4vw, 28px) 48px;
+  padding: 0 clamp(12px, 4vw, 28px) 104px;
 }
 .topbar {
   flex-wrap: wrap;
@@ -169,6 +169,30 @@ a:focus-visible {
   padding: clamp(16px, 3vw, 24px);
   box-shadow: 0 7px 22px #34281908;
 }
+@media (hover: hover) and (pointer: fine) {
+  .card {
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease,
+      border-color 180ms ease;
+  }
+  .card:hover,
+  .card:focus-within {
+    transform: translateY(-2px);
+    border-color: #c9b991;
+    box-shadow: 0 10px 26px #34281912;
+  }
+  .button {
+    transition:
+      transform 160ms ease,
+      box-shadow 160ms ease;
+  }
+  .button:hover,
+  .button:focus-visible {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px #34281924;
+  }
+}
 .card h2,
 .card h3 {
   font-family: var(--serif);
@@ -236,6 +260,42 @@ a:focus-visible {
   padding: 14px 0 26px;
   border-bottom: 1px solid var(--line);
   scroll-margin-top: 20px;
+}
+.section-entered {
+  animation: section-arrive 320ms ease-out both;
+}
+@keyframes section-arrive {
+  from {
+    opacity: 0.75;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.back-to-top {
+  position: fixed;
+  z-index: 4;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  min-width: 56px;
+  min-height: 48px;
+  padding: 10px 14px;
+  border: 1px solid #b79a68;
+  border-radius: 999px;
+  background: var(--dark);
+  color: #fffefa;
+  box-shadow: 0 4px 16px #0003;
+  cursor: pointer;
+}
+.back-to-top[aria-hidden="true"] {
+  visibility: hidden;
+  pointer-events: none;
+}
+.back-to-top:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
 }
 .section h2 {
   font: 500 30px var(--serif);
@@ -410,11 +470,19 @@ th.num {
     padding: 0;
   }
   .topbar,
+  .back-to-top,
   .actions,
   .no-print,
   .skip-link,
   .menu-trigger {
     display: none !important;
+  }
+  .section-entered {
+    animation: none !important;
+  }
+  .card,
+  .button {
+    transition: none !important;
   }
   .hero {
     border-radius: 0;
@@ -449,5 +517,17 @@ th.num {
   }
   .footer {
     padding-top: 14px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .section-entered {
+    animation: none;
+  }
+  .card,
+  .button {
+    transition: none;
   }
 }

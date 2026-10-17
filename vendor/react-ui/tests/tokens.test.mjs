@@ -34,3 +34,23 @@ test("shared layout starts narrow with fluid sizing and accessible touch targets
   assert.match(css, /Playfair Display Variable/);
   assert.match(css, /env\(safe-area-inset-top\)/);
 });
+
+test("shared back-to-top and section motion remain accessible and restrained", async () => {
+  const source = await readFile(
+    new URL("../src/index.tsx", import.meta.url),
+    "utf8",
+  );
+  const css = await readFile(
+    new URL("../src/styles.css", import.meta.url),
+    "utf8",
+  );
+  assert.match(source, /window\.scrollY > 480/);
+  assert.match(source, /aria-label="Back to top"/);
+  assert.match(source, /aria-hidden=\{!visible\}/);
+  assert.match(source, /focus\(\{ preventScroll: true \}\)/);
+  assert.match(source, /IntersectionObserver/);
+  assert.match(css, /\.back-to-top\s*\{[^}]*min-height:\s*48px/s);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(css, /@media print/);
+  assert.doesNotMatch(css, /opacity:\s*0;/);
+});
