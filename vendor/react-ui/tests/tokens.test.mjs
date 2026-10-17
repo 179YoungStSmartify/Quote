@@ -54,3 +54,31 @@ test("shared back-to-top and section motion remain accessible and restrained", a
   assert.match(css, /@media print/);
   assert.doesNotMatch(css, /opacity:\s*0;/);
 });
+
+test("shared controls merge classes and provide explicit focus, disabled, and print states", async () => {
+  const source = await readFile(
+    new URL("../src/index.tsx", import.meta.url),
+    "utf8",
+  );
+  const css = await readFile(
+    new URL("../src/styles.css", import.meta.url),
+    "utf8",
+  );
+  assert.match(source, /className=\{\["button", variant, className\]/);
+  assert.match(css, /--bronze-text:/);
+  assert.match(css, /--space-xs:/);
+  assert.match(css, /--type-section:/);
+  assert.match(css, /\.table-wrap:focus-visible/);
+  assert.match(css, /\.button:disabled/);
+  assert.match(css, /\.card--interactive:hover/);
+  assert.match(css, /\.section > h2::after/);
+  assert.match(
+    css,
+    /\.mobile-overlay,[\s\S]*?\.mobile-panel[\s\S]*?display:\s*none\s*!important/,
+  );
+  assert.match(css, /@media print[\s\S]*?transform:\s*none\s*!important/);
+  assert.match(
+    css,
+    /@media \(prefers-reduced-motion: reduce\)[\s\S]*?transform:\s*none\s*!important/,
+  );
+});

@@ -39,6 +39,8 @@ The `pages.yml` workflow installs dependencies, runs unit/type/lint checks, buil
 
 Screen totals and PDF totals derive from line items and discounts. Authored optional subtotal amounts also appear in both renderers and must be reconciled with the line items. After editing approved content, check the browser page, generated PDF, and print preview.
 
+The quote summary uses a charcoal total card and a quieter aligned breakdown, with a 24px narrow / 32px wide gap before the overview cards. Print switches the total card to white with dark text and a compact two-column summary. Category titles and subtotal labels come from the JSON and are shared with the PDF; use descriptive names rather than section letters.
+
 ## Pages base path
 
 `vite.config.ts` defaults to `/Quote/`; the Pages workflow sets the same exact value for its production build. Keep the uppercase `Q` and trailing slash. For a different host or repository path, change Vite base and deployment configuration together, then verify built asset URLs and PDF download links below that path. Do not use the root-hosted default when publishing this project site.

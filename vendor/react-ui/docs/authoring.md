@@ -24,3 +24,7 @@ node scripts/sync-snapshot.mjs . ../react-proposal-template/vendor/react-ui --so
 ```
 
 The script requires source directory, target directory, and `--source-sha <git-sha>`. It removes existing target entries before copying; excluded are `node_modules`, `dist`, and `.git`. Inspect the snapshot diff and provenance record, then run checks in each affected app. Templates use `file:vendor/react-ui`, so `npm ci` after synchronization refreshes their local installed package. Do not include client data in the library or examples.
+
+Use `--bronze` for decorative rules and `--bronze-text` for readable bronze text on paper. Static cards do not lift on hover; opt into card feedback with `card--interactive`. Button custom classes are additive to the shared base and variant. Keep transforms suppressed for reduced motion and print, and ensure focus remains distinct on both paper and charcoal.
+
+Use the shared spacing roles `--space-xs` through `--space-lg` for consistent gaps, and `--type-body`, `--type-small`, and `--type-section` for common text sizes. The imported DM Sans Variable and Playfair Display Variable families remain the sans and serif roles.

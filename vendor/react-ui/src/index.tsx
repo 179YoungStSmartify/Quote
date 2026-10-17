@@ -193,6 +193,7 @@ export function Badge({ children }: { children: React.ReactNode }) {
 export function Button({
   children,
   variant = "primary",
+  className,
   ...props
 }: {
   children: React.ReactNode;
@@ -200,7 +201,7 @@ export function Button({
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
-      className={`button ${variant === "primary" ? "" : variant}`}
+      className={["button", variant, className].filter(Boolean).join(" ")}
       {...props}
     >
       {children}
