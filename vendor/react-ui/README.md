@@ -36,6 +36,8 @@ export function Example() {
 
 ## Tokens and styling
 
+The mobile navigation trigger uses the maintained `HamburgerMenuIcon` from `@radix-ui/react-icons`, styled by `.menu-trigger` with a minimum 44×44px hit area. The SVG is decorative; Radix Dialog retains the accessible “Open navigation” label, expanded state, keyboard interaction and focus restoration. Reuse maintained primitives behind thin shared wrappers rather than duplicating their behavior.
+
 `src/styles.css` owns the reset, responsive layout, print rules, fonts, and theme variables. Main variables are `--paper`, `--surface`, `--ink`, `--muted`, `--bronze`, `--gold`, `--line`, `--dark`, `--serif`, and `--radius`. Override variables in the consuming app after importing the package stylesheet; add app-specific selectors to the app's own stylesheet. Keep visible `:focus-visible` indicators, the 320px minimum layout, reduced-motion considerations, and print behavior in mind when editing.
 
 ## Updating app snapshots
