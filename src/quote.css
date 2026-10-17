@@ -255,7 +255,8 @@
     color: var(--ink) !important;
     padding: 16px;
   }
-  .hero h1 {
+  .hero h1,
+  .hero p {
     color: var(--ink);
   }
   .hero .eyebrow,
