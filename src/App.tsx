@@ -10,9 +10,14 @@ const cents = (n: number) =>
   }).format(n / 100);
 const line = (x: { quantity: number; unitCents: number }) =>
   x.quantity * x.unitCents;
+const sectionOriginal = (s: (typeof q.sections)[number]) =>
+  s.items.reduce((sum, item) => sum + line(item), 0);
 const sectionTotal = (s: (typeof q.sections)[number]) =>
-  s.items.reduce((a, x) => a + line(x), 0) +
-  (s.discount ? line(s.discount) : 0);
+  sectionOriginal(s) + (s.discount ? line(s.discount) : 0);
+const originalTotal = q.sections.reduce(
+  (sum, section) => sum + sectionOriginal(section),
+  0,
+);
 const total = q.sections.reduce((sum, s) => sum + sectionTotal(s), 0),
   discount = q.sections.reduce(
     (sum, s) => sum + (s.discount ? Math.abs(line(s.discount)) : 0),
@@ -55,14 +60,36 @@ export default function App() {
         <div className="grid quote-summary-grid">
           <Card className="quote-summary-total">
             <span className="eyebrow">Total investment · AUD</span>
+            {originalTotal > total && (
+              <p className="quote-summary-original">
+                <span>Before discount</span>
+                <s>{cents(originalTotal)}</s>
+              </p>
+            )}
+            {originalTotal > total && (
+              <span className="sr-only">After discount:</span>
+            )}
             <p className="summary quote-summary-amount">{cents(total)}</p>
           </Card>
           <Card className="quote-summary-breakdown">
             <dl>
               {q.sections.map((section) => (
-                <div key={section.id}>
+                <div key={section.id} data-summary-section={section.id}>
                   <dt>{section.title}</dt>
-                  <dd>{cents(sectionTotal(section))}</dd>
+                  <dd>
+                    {sectionOriginal(section) > sectionTotal(section) && (
+                      <>
+                        <span className="sr-only">Before discount:</span>
+                        <s className="quote-summary-section-original">
+                          {cents(sectionOriginal(section))}
+                        </s>
+                        <span className="sr-only">After discount:</span>
+                      </>
+                    )}
+                    <span className="quote-summary-section-amount">
+                      {cents(sectionTotal(section))}
+                    </span>
+                  </dd>
                 </div>
               ))}
               <div className="discount-summary">

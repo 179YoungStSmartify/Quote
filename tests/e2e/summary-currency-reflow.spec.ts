@@ -21,7 +21,9 @@ test("enlarged summary currency remains one intact token across column transitio
       });
     });
     const measurements = await page
-      .locator(".quote-summary-amount, .quote-summary-breakdown dd")
+      .locator(
+        ".quote-summary-amount, .quote-summary-original s, .quote-summary-section-original, .quote-summary-section-amount, .discount-summary dd",
+      )
       .evaluateAll((elements) =>
         elements.map((element) => {
           const range = document.createRange();
