@@ -430,8 +430,9 @@ th.num {
   color: #f5f0e7;
   border: 1px solid #70654e;
   border-radius: 6px;
+  min-width: 44px;
   min-height: 44px;
-  padding: 8px 12px;
+  padding: 8px;
 }
 .mobile-overlay {
   position: fixed;

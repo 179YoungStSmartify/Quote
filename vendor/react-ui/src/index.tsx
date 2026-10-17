@@ -1,5 +1,6 @@
 import React from "react";
 import { Dialog } from "radix-ui";
+import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 const links = [
   ["Overview", "#overview"],
   ["Scope", "#scope"],
@@ -49,7 +50,12 @@ export function Shell({ children }: { children: React.ReactNode }) {
               type="button"
               aria-label="Open navigation"
             >
-              Menu
+              <HamburgerMenuIcon
+                width={24}
+                height={24}
+                aria-hidden="true"
+                focusable="false"
+              />
             </button>
           </Dialog.Trigger>
           <Dialog.Portal>

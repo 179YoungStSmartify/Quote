@@ -8,5 +8,6 @@ This package is original code. It consumes React as a peer and bundles the follo
 No source implementation, shadcn CSS, Radix code, or client assets from the design reference are redistributed here.
 
 - Radix UI — MIT License, WorkOS. Full notice: `licenses/Radix-UI-MIT.txt`.
+- Radix Icons (`@radix-ui/react-icons`) — MIT License, WorkOS. Full notice: `licenses/Radix-Icons-MIT.txt`.
 - DM Sans Variable and Playfair Display Variable full copyright and OFL 1.1 texts: `licenses/`.
 - React full MIT notice: `licenses/React-MIT.txt`.
