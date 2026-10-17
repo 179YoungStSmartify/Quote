@@ -50,14 +50,14 @@ export default function App() {
           <span>VALID UNTIL {q.validUntil}</span>
         </div>
       </div>
-      <section className="section" aria-label="Quote summary">
+      <section className="section quote-summary" aria-label="Quote summary">
         <h2>Quote summary</h2>
-        <div className="grid">
-          <Card>
+        <div className="grid quote-summary-grid">
+          <Card className="quote-summary-total">
             <span className="eyebrow">Total investment · AUD</span>
-            <p className="summary">{cents(total)}</p>
+            <p className="summary quote-summary-amount">{cents(total)}</p>
           </Card>
-          <Card>
+          <Card className="quote-summary-breakdown">
             <dl>
               {q.sections.map((section) => (
                 <div key={section.id}>

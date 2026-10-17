@@ -16,10 +16,12 @@ test("release acceptance: real navigation, mobile focus, summary, and error-free
   await page.goto("/Quote/");
   await page.evaluate(() => document.fonts.ready);
   const summary = page.getByRole("region", { name: "Quote summary" });
-  await expect(summary).toContainText("$16,692.00");
-  await expect(summary).toContainText("$15,416.00");
+  await expect(summary).toContainText("$15,453.20");
+  await expect(summary).toContainText("$14,177.20");
   await expect(summary).toContainText("$1,276.00");
   await expect(summary).toContainText("$3,600.00");
+  await expect(summary).toContainText("Smart home");
+  await expect(summary).toContainText("Network");
   for (const width of [1440, 768, 390, 320]) {
     await page.setViewportSize({ width, height: 850 });
     expect(
@@ -88,11 +90,17 @@ test("release acceptance: real navigation, mobile focus, summary, and error-free
   await page.emulateMedia({ media: "print" });
   await expect(page.locator("#scope")).toHaveCSS("break-inside", "auto");
   await expect(
-    page.getByText("60 days of support", { exact: false }),
+    page.getByText("For 60 days after handover", { exact: false }),
   ).toBeVisible();
   await expect(
     page.getByText("2 years, hardware only", { exact: false }),
   ).toBeVisible();
+  await page.emulateMedia({ media: "screen" });
+  await menu.click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await page.emulateMedia({ media: "print" });
+  await expect(page.locator(".mobile-overlay")).toHaveCSS("display", "none");
+  await expect(page.locator(".mobile-panel")).toHaveCSS("display", "none");
   expect(errors).toEqual([]);
 });
 

@@ -11,11 +11,19 @@
   --ink: #24211c;
   --muted: #716b60;
   --bronze: #94703a;
+  --bronze-text: #6d5127;
   --gold: #d5ae68;
   --line: #ded8cb;
   --dark: #211f1b;
   --serif: "Playfair Display Variable", Georgia, serif;
   --radius: 14px;
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --type-body: 1rem;
+  --type-small: 0.875rem;
+  --type-section: 1.875rem;
 }
 * {
   box-sizing: border-box;
@@ -30,7 +38,7 @@ html {
 }
 body {
   margin: 0;
-  font-size: 16px;
+  font-size: var(--type-body);
   line-height: 1.55;
 }
 button,
@@ -38,13 +46,18 @@ a {
   font: inherit;
 }
 a {
-  color: var(--bronze);
+  color: var(--bronze-text);
   text-underline-offset: 3px;
 }
 button:focus-visible,
 a:focus-visible {
-  outline: 3px solid var(--gold);
+  outline: 3px solid var(--bronze-text);
   outline-offset: 3px;
+}
+.topbar :focus-visible,
+.hero :focus-visible,
+.back-to-top:focus-visible {
+  outline-color: #edc878;
 }
 .shell {
   max-width: 1120px;
@@ -134,7 +147,7 @@ a:focus-visible {
   letter-spacing: 0.16em;
   font-weight: 700;
   font-size: 11px;
-  color: var(--bronze);
+  color: var(--bronze-text);
 }
 .hero .eyebrow {
   color: #dbb56c;
@@ -170,14 +183,14 @@ a:focus-visible {
   box-shadow: 0 7px 22px #34281908;
 }
 @media (hover: hover) and (pointer: fine) {
-  .card {
+  .card--interactive {
     transition:
       transform 180ms ease,
       box-shadow 180ms ease,
       border-color 180ms ease;
   }
-  .card:hover,
-  .card:focus-within {
+  .card--interactive:hover,
+  .card--interactive:focus-within {
     transform: translateY(-2px);
     border-color: #c9b991;
     box-shadow: 0 10px 26px #34281912;
@@ -192,6 +205,17 @@ a:focus-visible {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px #34281924;
   }
+}
+.button:active {
+  transform: translateY(1px);
+}
+.button:disabled,
+.button[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: default;
+  pointer-events: none;
+  box-shadow: none;
+  transform: none;
 }
 .card h2,
 .card h3 {
@@ -297,9 +321,16 @@ a:focus-visible {
   outline: 3px solid var(--gold);
   outline-offset: 3px;
 }
-.section h2 {
-  font: 500 30px var(--serif);
+.section > h2 {
+  font: 500 var(--type-section) var(--serif);
   margin: 8px 0 14px;
+}
+.section > h2::after {
+  content: "";
+  display: block;
+  width: 42px;
+  margin-top: 10px;
+  border-bottom: 2px solid var(--bronze);
 }
 .list {
   padding-left: 20px;
@@ -312,6 +343,10 @@ a:focus-visible {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 12px;
+}
+.table-wrap:focus-visible {
+  outline: 3px solid var(--bronze-text);
+  outline-offset: 3px;
 }
 table {
   width: 100%;
@@ -477,12 +512,22 @@ th.num {
   .menu-trigger {
     display: none !important;
   }
+  .mobile-overlay,
+  .mobile-panel {
+    display: none !important;
+  }
   .section-entered {
     animation: none !important;
   }
   .card,
   .button {
     transition: none !important;
+  }
+  .card,
+  .button,
+  .section-entered {
+    transform: none !important;
+    box-shadow: none !important;
   }
   .hero {
     border-radius: 0;
@@ -529,5 +574,10 @@ th.num {
   .card,
   .button {
     transition: none;
+  }
+  .card,
+  .button,
+  .section-entered {
+    transform: none !important;
   }
 }

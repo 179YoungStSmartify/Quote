@@ -1,6 +1,6 @@
 {
   "currency": "AUD",
-  "quoteId": "PL-HZL-179YS-0001-v1",
+  "quoteId": "PL-HZL-179YS-0001-v2",
   "preparedFor": "Hazal",
   "site": "179 Young St, Sunnybank QLD 4109",
   "quoteDate": "16/10/2026",
@@ -10,53 +10,58 @@
   "sections": [
     {
       "id": "smart-home",
-      "title": "A — Smart home",
+      "title": "Smart home",
       "items": [
         {
           "name": "SmartHome Server package (smart home controller with Zigbee/Thread radio)",
           "quantity": 1,
-          "unitCents": 59900
+          "unitCents": 40480
         },
         {
           "name": "Smart light switch (physical button, smart function)",
           "quantity": 30,
-          "unitCents": 18000
+          "unitCents": 5719
         },
         {
           "name": "15.6\" wall-mounted display",
           "quantity": 1,
-          "unitCents": 84900
+          "unitCents": 71390
         },
         {
           "name": "10\" wall-mounted display",
           "quantity": 2,
-          "unitCents": 74900
+          "unitCents": 54890
         },
         {
           "name": "4\" in-wall display (light switch retrofit)",
           "quantity": 2,
-          "unitCents": 29900
+          "unitCents": 21890
         },
         {
           "name": "Presence sensor",
           "quantity": 4,
-          "unitCents": 19900
+          "unitCents": 10890
         },
         {
           "name": "Door sensor",
           "quantity": 4,
-          "unitCents": 6900
+          "unitCents": 4290
         },
         {
           "name": "Installation, configuration and programming (hours)",
-          "quantity": 50,
+          "quantity": 60,
           "unitCents": 18000
+        },
+        {
+          "name": "R&D development — custom integrations and dashboards (hours)",
+          "quantity": 20,
+          "unitCents": 10000
         }
       ],
       "interimSubtotal": {
         "afterItemCount": 7,
         "label": "Hardware subtotal",
-        "amountCents": 1001600
+        "amountCents": 497720
       },
       "discount": {
         "label": "Special discount — 20 hours installation free",
@@ -64,14 +69,14 @@
         "unitCents": -18000
       },
       "grossSubtotal": {
-        "label": "Section A subtotal",
-        "amountCents": 1901600
+        "label": "Smart home subtotal",
+        "amountCents": 1777720
       },
-      "finalLabel": "Section A total"
+      "finalLabel": "Smart home total"
     },
     {
       "id": "network",
-      "title": "B — Network",
+      "title": "Network",
       "items": [
         {
           "name": "UniFi Cloud Gateway Ultra (UCG-Ultra)",
@@ -92,7 +97,7 @@
       "discount": null,
       "interimSubtotal": null,
       "grossSubtotal": null,
-      "finalLabel": "Section B total"
+      "finalLabel": "Network total"
     }
   ],
   "inclusions": {
@@ -114,14 +119,14 @@
     ]
   },
   "terms": [
-    "This quote includes up to 50 hours of installation and setup. Any work beyond 50 hours is charged separately at $180.00 per hour.",
+    "This quote includes up to 80 hours of work (60 hours installation and setup, 20 of them free, plus 20 hours R&D development). Any work beyond 80 hours is charged separately at $180.00 per hour.",
     "Integrations marked 'best effort' depend on the device and manufacturer supporting Home Assistant. If a device can't be integrated reliably, it is not charged as extra hours.",
     "Home Assistant remote access and cloud backup run on a Nabu Casa subscription, paid by the client directly.",
-    "The network (Section B) is priced separately and can be accepted on its own.",
+    "The network is priced separately and can be accepted on its own.",
     "Prices are valid for 30 days. Hardware prices may change if the supplier's prices change before order."
   ],
-  "hyperCare": "60 days of support and bug fixes within agreed scope for the system as delivered; no feature additions.",
-  "warranty": "2 years, hardware only. Installation work and recoding require a separate quote.",
+  "hyperCare": "For 60 days after handover, we provide support and bug fixes to keep the system working as delivered, within the quoted scope. New features, extra devices or changes to scope are quoted separately.",
+  "warranty": "2 years, hardware only. Supplied hardware is covered for 2 years. Re-installation, replacement labour and re-programming are quoted separately.",
   "signing": "Signing integration deferred. Acceptance lines are informational; no signing has occurred.",
   "discountSummary": "You save"
 }

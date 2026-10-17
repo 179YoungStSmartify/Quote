@@ -53,3 +53,7 @@ See [docs/authoring.md](docs/authoring.md) for maintenance, accessibility, and s
 ## Mobile-first layout contract
 
 The shared stylesheet starts with a single-column, fluid layout and adds two-column cards from 901px. Keep words and currency values intact, allow long metadata to wrap, and keep buttons, menu controls, and navigation links at least 44px high. Browser checks should cover 320, 360, 375, 390, 430, 768, 1024, and 1440px, portrait and landscape, text enlargement, keyboard dialog focus, and no clipped or horizontally hidden key content.
+
+Bronze has separate decorative (`--bronze`) and readable (`--bronze-text`) roles; the text role is at least 4.5:1 against paper. Static cards stay still; add `card--interactive` only when a card itself is interactive. `Button` merges caller `className` with its base and variant classes.
+
+Shared spacing roles are `--space-xs`, `--space-sm`, `--space-md`, and `--space-lg`; shared text roles are `--type-body`, `--type-small`, and `--type-section`.
