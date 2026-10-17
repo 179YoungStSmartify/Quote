@@ -45,6 +45,33 @@
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
+.quote-summary-original {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 4px 8px;
+  margin: 12px 0 0;
+  padding-inline: 8px;
+  color: #ded8cb;
+  font-size: 14px;
+}
+.quote-summary-original s,
+.quote-summary-section-original {
+  white-space: nowrap;
+}
+.quote-summary-original + .sr-only + .quote-summary-amount {
+  margin-top: 4px;
+}
+.quote-summary-section-original {
+  display: block;
+  color: var(--muted);
+  font-size: 0.875em;
+}
+.quote-summary-section-amount {
+  display: block;
+  font-weight: 600;
+}
 .quote-summary-breakdown dl {
   display: grid;
   gap: 8px;
@@ -320,6 +347,9 @@
     color: #24211c !important;
     background: #fff !important;
     border: 1px solid #777;
+  }
+  .quote-summary-total .quote-summary-original {
+    color: var(--muted);
   }
   .quote-summary-total .eyebrow,
   .quote-summary-total .quote-summary-amount {
