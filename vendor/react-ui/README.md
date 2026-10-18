@@ -18,7 +18,7 @@ npm run build
 
 ## Package API
 
-The package root exports `Shell`, `Section`, `Card`, `Badge`, `Button`, `BackToTop`, and `TableFrame` from `src/index.tsx`. `Shell` mounts `BackToTop` once by default; the named component also accepts a required `visible` boolean when used directly. Import the stylesheet once from the app entry point:
+The package root exports `Shell`, `Brand`, `BrandMark`, `Section`, `Card`, `Badge`, `Button`, `BackToTop`, and `TableFrame` from `src/index.tsx`. `Brand` renders the shared company link and decorative mark in the header; `BrandMark` renders only that decorative image. `Shell` mounts `BackToTop` once by default; the named component also accepts a required `visible` boolean when used directly. Import the stylesheet once from the app entry point:
 
 ```tsx
 import { Card, Section, Shell, Button, TableFrame } from '@perspective-living/react-ui';
