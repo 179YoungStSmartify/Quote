@@ -26,13 +26,15 @@ if args[0]=='api':
     method=value('--method') if '--method' in args else 'GET'
     endpoint=next((x for x in args[1:] if x.startswith('repos/')), '')
     if '/commits/' in endpoint:
-        if not s['exists']:
+        if not s['tag_exists']:
             print(json.dumps({'message':'No commit found','status':'422'}));sys.exit(1)
         print('b'*40 if s.get('moved') else os.environ['SOURCE_SHA'])
     elif '/git/ref/tags/' in endpoint:
-        if not s['exists']:
+        if not s['tag_exists']:
             print(json.dumps({'message':'Not Found','status':'404'}));sys.exit(1)
         print(json.dumps({'object':{'sha':os.environ['SOURCE_SHA']}}))
+    elif method=='POST' and endpoint.endswith('/git/refs'):
+        s['tag_exists']=True;save();print(json.dumps({'ref':'refs/tags/'+s['tag_name']}))
     elif method=='DELETE':
         aid=int(endpoint.rsplit('/',1)[-1]);s['assets']=[a for a in s['assets'] if a['id']!=aid];save()
     elif method=='PATCH':s['draft']=False;s['prerelease']=True;save();print(json.dumps(s))
@@ -79,7 +81,7 @@ class PublicationTests(unittest.TestCase):
     def tearDown(self):self.tmp.cleanup()
     def execute(self,kind='release',states=('uploaded','uploaded'),exists=True,draft=False,moved=False):
         tag='app-main-'+SHA if kind=='main' else 'v0.0.1'
-        state={'id':1,'exists':exists,'tag_name':tag,'draft':draft,'prerelease':kind=='main','moved':moved,'assets':[{'id':i+1,'name':name,'state':status} for i,(name,status) in enumerate(zip(['app.tar.gz','app-manifest.json'],states))]}
+        state={'id':1,'exists':exists,'tag_exists':exists,'tag_name':tag,'draft':draft,'prerelease':kind=='main','moved':moved,'assets':[{'id':i+1,'name':name,'state':status} for i,(name,status) in enumerate(zip(['app.tar.gz','app-manifest.json'],states))]}
         (self.remote/'state.json').write_text(json.dumps(state))
         work=self.root/'run';work.mkdir();(work/'bundle').symlink_to(self.bundle,target_is_directory=True)
         env=dict(os.environ,PATH=str(self.bin)+os.pathsep+os.environ['PATH'],FAKE_REMOTE=str(self.remote),SOURCE_KIND=kind,SOURCE_SHA=SHA,RELEASE_TAG=tag if kind=='release' else '',PUBLICATION_TAG=tag,REPOSITORY='TEST/NO-NETWORK')

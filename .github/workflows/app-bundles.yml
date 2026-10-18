@@ -177,7 +177,11 @@ jobs:
             if tag_ref="$(gh api "repos/$REPOSITORY/git/ref/tags/$PUBLICATION_TAG" 2>/dev/null)"; then
               tag_sha="$(gh api "repos/$REPOSITORY/commits/$PUBLICATION_TAG" --jq .sha)"
               [[ "$tag_sha" == "$SOURCE_SHA" ]]
-            elif [[ "$(jq -r '.status // empty' <<< "$tag_ref")" != 404 ]]; then
+            elif [[ "$(jq -r '.status // empty' <<< "$tag_ref")" == 404 ]]; then
+              # GitHub drafts do not materialize a Git tag until publication.
+              # Create the exact ref now so pre-activation SHA checks are meaningful.
+              gh api --method POST "repos/$REPOSITORY/git/refs" -f ref="refs/tags/$PUBLICATION_TAG" -f sha="$SOURCE_SHA" >/dev/null
+            else
               echo "unable to verify publication tag absence" >&2
               exit 1
             fi
