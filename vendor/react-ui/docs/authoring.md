@@ -4,10 +4,13 @@
 
 - `src/index.tsx`: exported React components and their prop types.
 - `src/styles.css`: fonts, CSS variables, component classes, responsive breakpoints, focus styling, and print rules.
+- `src/brand-mark.svg`: approved shared header mark asset loaded by `BrandMark` through a module-relative URL.
 - `tests/tokens.test.mjs`: automated token and stylesheet contract checks.
 - `scripts/sync-snapshot.mjs`: copies a selected library checkout into an app's `vendor/react-ui` folder and writes its provenance record.
 
 Keep project-specific page content and business rules in the consuming app. Add a shared component only when it expresses reusable structure or behavior. Export named components from `src/index.tsx` and document their actual props in the README.
+
+`Brand` combines the company name and tagline with the decorative `BrandMark`; keep the text as the link's accessible name and keep the image hidden from assistive technology. Preserve the mark artwork and intrinsic dimensions when adjusting its responsive display size.
 
 ## Accessibility and visual review
 

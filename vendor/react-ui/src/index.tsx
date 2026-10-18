@@ -6,6 +6,32 @@ const links = [
   ["Scope", "#scope"],
   ["Details", "#terms"],
 ];
+const brandMarkUrl = new URL("./brand-mark.svg", import.meta.url).href;
+
+export function BrandMark() {
+  return (
+    <img
+      className="brand-mark"
+      src={brandMarkUrl}
+      alt=""
+      aria-hidden="true"
+      width={40}
+      height={40}
+    />
+  );
+}
+
+export function Brand() {
+  return (
+    <a className="brand" href="#top">
+      <BrandMark />
+      <span>
+        Perspective Living<small>SMART HOME & NETWORKS</small>
+      </span>
+    </a>
+  );
+}
+
 export function Shell({ children }: { children: React.ReactNode }) {
   const navigationTarget = React.useRef<string | null>(null);
   const [showBackToTop, setShowBackToTop] = React.useState(false);
@@ -29,13 +55,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
       <a className="skip-link" href="#main">
         Skip to content
       </a>
-      <header className="topbar">
-        <a className="brand" href="#top">
-          <span className="brand-mark">P</span>
-          <span>
-            Perspective Living<small>SMART HOME & NETWORKS</small>
-          </span>
-        </a>
+      <header className="topbar" id="top">
+        <Brand />
         <nav className="nav" aria-label="Main navigation">
           {links.map(([label, href]) => (
             <a key={href} href={href}>
@@ -100,7 +121,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
           </Dialog.Portal>
         </Dialog.Root>
       </header>
-      <div className="shell" id="top">
+      <div className="shell">
         <main id="main" tabIndex={-1}>
           {children}
         </main>
