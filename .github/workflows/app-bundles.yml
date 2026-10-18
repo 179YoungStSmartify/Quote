@@ -174,9 +174,11 @@ jobs:
           python3 -c 'import sys; sys.path.insert(0,"bundle"); import package_app; assert package_app.verify("bundle/app.tar.gz","bundle/app-manifest.json")["commit"] == sys.argv[1]' "$SOURCE_SHA"
           if [[ "$SOURCE_KIND" == main ]]; then
             [[ "$PUBLICATION_TAG" == "app-main-$SOURCE_SHA" ]]
-            tag_sha="$(gh api "repos/$REPOSITORY/commits/$PUBLICATION_TAG" --jq .sha 2>/dev/null || true)"
-            if [[ -n "$tag_sha" && "$tag_sha" != "$SOURCE_SHA" ]]; then
-              echo "existing publication tag resolves to another commit" >&2
+            if tag_ref="$(gh api "repos/$REPOSITORY/git/ref/tags/$PUBLICATION_TAG" 2>/dev/null)"; then
+              tag_sha="$(gh api "repos/$REPOSITORY/commits/$PUBLICATION_TAG" --jq .sha)"
+              [[ "$tag_sha" == "$SOURCE_SHA" ]]
+            elif [[ "$(jq -r '.status // empty' <<< "$tag_ref")" != 404 ]]; then
+              echo "unable to verify publication tag absence" >&2
               exit 1
             fi
             if gh release view "$PUBLICATION_TAG" --repo "$REPOSITORY" >/dev/null 2>&1; then

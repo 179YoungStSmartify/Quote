@@ -25,7 +25,14 @@ def value(flag):return args[args.index(flag)+1]
 if args[0]=='api':
     method=value('--method') if '--method' in args else 'GET'
     endpoint=next((x for x in args[1:] if x.startswith('repos/')), '')
-    if '/commits/' in endpoint: print('b'*40 if s.get('moved') else os.environ['SOURCE_SHA'])
+    if '/commits/' in endpoint:
+        if not s['exists']:
+            print(json.dumps({'message':'No commit found','status':'422'}));sys.exit(1)
+        print('b'*40 if s.get('moved') else os.environ['SOURCE_SHA'])
+    elif '/git/ref/tags/' in endpoint:
+        if not s['exists']:
+            print(json.dumps({'message':'Not Found','status':'404'}));sys.exit(1)
+        print(json.dumps({'object':{'sha':os.environ['SOURCE_SHA']}}))
     elif method=='DELETE':
         aid=int(endpoint.rsplit('/',1)[-1]);s['assets']=[a for a in s['assets'] if a['id']!=aid];save()
     elif method=='PATCH':s['draft']=False;s['prerelease']=True;save();print(json.dumps(s))
