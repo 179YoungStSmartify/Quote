@@ -24,6 +24,7 @@ const contentTypes = {
   ".js": "text/javascript",
   ".css": "text/css",
   ".pdf": "application/pdf",
+  ".ico": "image/x-icon",
   ".svg": "image/svg+xml",
   ".woff2": "font/woff2",
   ".png": "image/png",
@@ -80,6 +81,88 @@ try {
   if (!response?.ok()) throw new Error("root index did not load");
   if (new URL(page.url()).pathname !== "/")
     throw new Error(`app redirected away from root: ${page.url()}`);
+  if (
+    (await page
+      .locator('link[rel="icon"], link[rel="apple-touch-icon"]')
+      .count()) > 0
+  ) {
+    const icons = [
+      { rel: "icon", href: "favicon.svg", type: "image/svg+xml", sizes: "any" },
+      {
+        rel: "icon",
+        href: "favicon.ico",
+        type: "image/x-icon",
+        sizes: "16x16 32x32 48x48",
+      },
+      {
+        rel: "icon",
+        href: "favicon-16x16.png",
+        type: "image/png",
+        sizes: "16x16",
+      },
+      {
+        rel: "icon",
+        href: "favicon-32x32.png",
+        type: "image/png",
+        sizes: "32x32",
+      },
+      {
+        rel: "apple-touch-icon",
+        href: "apple-touch-icon.png",
+        type: "image/png",
+        sizes: "180x180",
+      },
+    ];
+    for (const icon of icons) {
+      const link = page.locator(
+        `link[rel="${icon.rel}"][href="/${icon.href}"]`,
+      );
+      if ((await link.count()) !== 1)
+        throw new Error(`missing root ${icon.href} link`);
+      if (icon.type && (await link.getAttribute("type")) !== icon.type)
+        throw new Error(`incorrect ${icon.href} type`);
+      if ((await link.getAttribute("sizes")) !== icon.sizes)
+        throw new Error(`incorrect ${icon.href} sizes`);
+      const iconResponse = await page.request.get(
+        new URL(icon.href, base).href,
+      );
+      if (!iconResponse.ok()) throw new Error(`root ${icon.href} did not load`);
+      const mime = iconResponse.headers()["content-type"] ?? "";
+      if (
+        icon.href.endsWith(".ico")
+          ? !/image\/(x-icon|vnd\.microsoft\.icon|icon)/.test(mime)
+          : !mime.includes(icon.type)
+      )
+        throw new Error(`incorrect MIME for root ${icon.href}: ${mime}`);
+      const body = await iconResponse.body();
+      if (icon.href.endsWith(".svg")) {
+        const svg = body.toString("utf8");
+        if (
+          !/<svg\b/i.test(svg) ||
+          /<script\b|<foreignObject\b|preview\s*labels?/i.test(svg) ||
+          /(?:href|src)\s*=\s*["']\s*(?:https?:|\/\/|data:)/i.test(svg) ||
+          /url\(\s*["']?\s*(?:https?:|\/\/|data:)/i.test(svg)
+        )
+          throw new Error("root favicon.svg has unsafe or invalid content");
+      } else if (icon.href.endsWith(".png")) {
+        const dimension = Number(icon.sizes.split("x")[0]);
+        if (
+          !body
+            .subarray(0, 8)
+            .equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])) ||
+          body.readUInt32BE(16) !== dimension ||
+          body.readUInt32BE(20) !== dimension
+        )
+          throw new Error(`root ${icon.href} has invalid PNG data`);
+      } else if (
+        body.readUInt16LE(0) !== 0 ||
+        body.readUInt16LE(2) !== 1 ||
+        body.readUInt16LE(4) !== 3
+      ) {
+        throw new Error("root favicon.ico must contain three icon entries");
+      }
+    }
+  }
   if (
     !(await page
       .getByRole("heading", { name: /thoughtful foundation/i })
