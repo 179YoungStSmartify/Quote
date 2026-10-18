@@ -1,0 +1,247 @@
+name: Publish container app bundles
+on:
+  push:
+    branches: [main]
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      source:
+        description: Trusted source to rebuild
+        required: true
+        type: choice
+        options: [main, release]
+      stable_tag:
+        description: Existing stable release tag (required for source=release)
+        required: false
+        type: string
+permissions:
+  contents: read
+jobs:
+  build:
+    if: github.repository == '179YoungStSmartify/Quote' && (github.event_name != 'release' || (github.event.action == 'published' && !github.event.release.draft && !github.event.release.prerelease && !startsWith(github.event.release.tag_name, 'app-main-')))
+    runs-on: ubuntu-latest
+    outputs:
+      source_kind: ${{ steps.source.outputs.kind }}
+      source_sha: ${{ steps.source.outputs.sha }}
+      release_tag: ${{ steps.source.outputs.tag }}
+      publication_tag: ${{ steps.source.outputs.publication_tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Select trusted immutable source
+        id: source
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_SHA: ${{ github.sha }}
+          EVENT_TAG: ${{ github.event.release.tag_name }}
+          INPUT_SOURCE: ${{ inputs.source }}
+          INPUT_TAG: ${{ inputs.stable_tag }}
+          REF_NAME: ${{ github.ref }}
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          if [[ "$EVENT_NAME" == push ]]; then
+            [[ "$REF_NAME" == refs/heads/main ]]
+            [[ "$EVENT_SHA" =~ ^[0-9a-f]{40}$ ]]
+            {
+              echo "kind=main"
+              echo "sha=$EVENT_SHA"
+              echo "publication_tag=app-main-$EVENT_SHA"
+              echo "ref=$EVENT_SHA"
+            } >> "$GITHUB_OUTPUT"
+          elif [[ "$EVENT_NAME" == release ]]; then
+            [[ "$EVENT_TAG" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]
+            git fetch --no-tags origin "refs/tags/$EVENT_TAG:refs/tags/$EVENT_TAG"
+            sha="$(git rev-list -n 1 "refs/tags/$EVENT_TAG")"
+            [[ "$sha" =~ ^[0-9a-f]{40}$ ]]
+            {
+              echo "kind=release"
+              echo "sha=$sha"
+              echo "tag=$EVENT_TAG"
+              echo "publication_tag=$EVENT_TAG"
+              echo "ref=$EVENT_TAG"
+            } >> "$GITHUB_OUTPUT"
+          else
+            [[ "$REF_NAME" == refs/heads/main ]]
+            if [[ "$INPUT_SOURCE" == main ]]; then
+              [[ -z "$INPUT_TAG" ]]
+              sha="$(git ls-remote origin refs/heads/main | cut -f1)"
+              [[ "$sha" =~ ^[0-9a-f]{40}$ ]]
+              {
+                echo "kind=main"
+                echo "sha=$sha"
+                echo "publication_tag=app-main-$sha"
+                echo "ref=$sha"
+              } >> "$GITHUB_OUTPUT"
+            else
+              [[ "$INPUT_SOURCE" == release && "$INPUT_TAG" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]
+              release="$(gh api "repos/$REPOSITORY/releases/tags/$INPUT_TAG")"
+              [[ "$(jq -r '.tag_name' <<< "$release")" == "$INPUT_TAG" ]]
+              [[ "$(jq -r '.draft' <<< "$release")" == false && "$(jq -r '.prerelease' <<< "$release")" == false ]]
+              git fetch --no-tags origin "refs/tags/$INPUT_TAG:refs/tags/$INPUT_TAG"
+              sha="$(git rev-list -n 1 "refs/tags/$INPUT_TAG")"
+              [[ "$sha" =~ ^[0-9a-f]{40}$ ]]
+              {
+                echo "kind=release"
+                echo "sha=$sha"
+                echo "tag=$INPUT_TAG"
+                echo "publication_tag=$INPUT_TAG"
+                echo "ref=$INPUT_TAG"
+              } >> "$GITHUB_OUTPUT"
+            fi
+          fi
+      - name: Test publication recovery before source selection
+        run: python3 -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Preserve trusted bundle tooling for older source tags
+        run: |
+          set -euo pipefail
+          tools="$RUNNER_TEMP/app-bundle-tools"
+          mkdir -p "$tools/scripts" "$tools/tests"
+          cp scripts/package_app.py scripts/root-smoke.mjs "$tools/scripts/"
+          cp tests/test_bundle.py "$tools/tests/"
+          echo "BUNDLE_TOOLS=$tools" >> "$GITHUB_ENV"
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.source.outputs.ref }}
+          persist-credentials: false
+      - name: Confirm checkout is the selected source
+        env:
+          SOURCE_SHA: ${{ steps.source.outputs.sha }}
+        run: |
+          set -euo pipefail
+          [[ "$(git rev-parse HEAD)" == "$SOURCE_SHA" ]]
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: python3 -m unittest discover -s "$BUNDLE_TOOLS/tests" -p test_bundle.py
+      - run: npm test
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run build
+        env:
+          VITE_BASE_PATH: /Quote/
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - name: Build root-hosted app and run root browser smoke
+        env:
+          VITE_BASE_PATH: /
+          SOURCE_SHA: ${{ steps.source.outputs.sha }}
+        run: |
+          set -euo pipefail
+          npm run build
+          node "$BUNDLE_TOOLS/scripts/root-smoke.mjs" dist
+          python3 "$BUNDLE_TOOLS/scripts/package_app.py" package --dist dist --output bundle --commit "$SOURCE_SHA"
+          python3 "$BUNDLE_TOOLS/scripts/package_app.py" verify --archive bundle/app.tar.gz --manifest bundle/app-manifest.json
+          cp "$BUNDLE_TOOLS/scripts/package_app.py" bundle/package_app.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-bundle
+          path: bundle/
+          if-no-files-found: error
+          retention-days: 3
+  publish:
+    needs: build
+    if: needs.build.result == 'success'
+    concurrency:
+      group: app-bundle-${{ needs.build.outputs.source_kind }}-${{ needs.build.outputs.source_kind == 'main' && needs.build.outputs.source_sha || needs.build.outputs.release_tag }}
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: app-bundle
+          path: bundle
+      - name: Verify bundle and publish to exact immutable release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          SOURCE_KIND: ${{ needs.build.outputs.source_kind }}
+          SOURCE_SHA: ${{ needs.build.outputs.source_sha }}
+          RELEASE_TAG: ${{ needs.build.outputs.release_tag }}
+          PUBLICATION_TAG: ${{ needs.build.outputs.publication_tag }}
+        run: |
+          set -euo pipefail
+          [[ "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          python3 bundle/package_app.py verify --archive bundle/app.tar.gz --manifest bundle/app-manifest.json
+          python3 -c 'import sys; sys.path.insert(0,"bundle"); import package_app; assert package_app.verify("bundle/app.tar.gz","bundle/app-manifest.json")["commit"] == sys.argv[1]' "$SOURCE_SHA"
+          if [[ "$SOURCE_KIND" == main ]]; then
+            [[ "$PUBLICATION_TAG" == "app-main-$SOURCE_SHA" ]]
+            tag_sha="$(gh api "repos/$REPOSITORY/commits/$PUBLICATION_TAG" --jq .sha 2>/dev/null || true)"
+            if [[ -n "$tag_sha" && "$tag_sha" != "$SOURCE_SHA" ]]; then
+              echo "existing publication tag resolves to another commit" >&2
+              exit 1
+            fi
+            if gh release view "$PUBLICATION_TAG" --repo "$REPOSITORY" >/dev/null 2>&1; then
+              state="$(gh release view "$PUBLICATION_TAG" --repo "$REPOSITORY" --json isDraft,isPrerelease,tagName)"
+              [[ "$(jq -r .tagName <<< "$state")" == "$PUBLICATION_TAG" ]]
+              tag_sha="$(gh api "repos/$REPOSITORY/commits/$PUBLICATION_TAG" --jq .sha)"
+              [[ "$tag_sha" == "$SOURCE_SHA" ]]
+              if [[ "$(jq -r .isPrerelease <<< "$state")" == true && "$(jq -r .isDraft <<< "$state")" == false ]]; then
+                mkdir existing
+                gh release download "$PUBLICATION_TAG" --repo "$REPOSITORY" --dir existing
+                python3 -c 'import sys; sys.path.insert(0,"bundle"); import package_app; d=package_app.verify("existing/app.tar.gz","existing/app-manifest.json"); assert d["commit"] == sys.argv[1]' "$SOURCE_SHA"
+                # PDF creation metadata may vary across rebuilds. A verified existing
+                # artifact for this exact commit is authoritative and never overwritten.
+                echo "completed immutable main prerelease already exists and matches; no overwrite"
+                exit 0
+              fi
+              if [[ "$(jq -r .isDraft <<< "$state")" != true || "$(jq -r .isPrerelease <<< "$state")" != true ]]; then
+                echo "refusing to alter an unexpected existing release" >&2
+                exit 1
+              fi
+              while read -r asset_id; do
+                [[ -z "$asset_id" ]] || gh api --method DELETE "repos/$REPOSITORY/releases/assets/$asset_id"
+              done < <(gh api "repos/$REPOSITORY/releases/tags/$PUBLICATION_TAG" --jq '.assets[] | select(.name == "app.tar.gz" or .name == "app-manifest.json") | .id')
+            else
+              gh release create "$PUBLICATION_TAG" --repo "$REPOSITORY" --target "$SOURCE_SHA" --draft --prerelease --title "Container app $SOURCE_SHA" --notes "Tested root-hosted container app bundle for commit $SOURCE_SHA."
+            fi
+            gh release upload "$PUBLICATION_TAG" bundle/app.tar.gz bundle/app-manifest.json --repo "$REPOSITORY"
+            release_id="$(gh release view "$PUBLICATION_TAG" --repo "$REPOSITORY" --json databaseId --jq .databaseId)"
+            gh api "repos/$REPOSITORY/releases/$release_id" > release-after-upload.json
+            jq -e '[.assets[] | select((.name == "app.tar.gz" or .name == "app-manifest.json") and .state == "uploaded")] | length == 2' release-after-upload.json >/dev/null
+            mkdir readback
+            gh release download "$PUBLICATION_TAG" --repo "$REPOSITORY" --pattern app.tar.gz --pattern app-manifest.json --dir readback
+            python3 -c 'import sys; sys.path.insert(0,"bundle"); import package_app; assert package_app.verify("readback/app.tar.gz","readback/app-manifest.json")["commit"] == sys.argv[1]' "$SOURCE_SHA"
+            [[ "$(gh api "repos/$REPOSITORY/commits/$PUBLICATION_TAG" --jq .sha)" == "$SOURCE_SHA" ]]
+            state="$(gh release view "$PUBLICATION_TAG" --repo "$REPOSITORY" --json databaseId,isDraft,isPrerelease,tagName)"
+            [[ "$(jq -r .tagName <<< "$state")" == "$PUBLICATION_TAG" && "$(jq -r .isDraft <<< "$state")" == true && "$(jq -r .isPrerelease <<< "$state")" == true ]]
+            gh api --method PATCH "repos/$REPOSITORY/releases/$(gh release view "$PUBLICATION_TAG" --repo "$REPOSITORY" --json databaseId --jq .databaseId)" -F draft=false -F prerelease=true -f make_latest=false >/dev/null
+          else
+            [[ "$SOURCE_KIND" == release && -n "$RELEASE_TAG" && "$PUBLICATION_TAG" == "$RELEASE_TAG" ]]
+            release="$(gh api "repos/$REPOSITORY/releases/tags/$RELEASE_TAG")"
+            release_id="$(jq -r .id <<< "$release")"
+            [[ "$(jq -r .tag_name <<< "$release")" == "$RELEASE_TAG" ]]
+            [[ "$(jq -r .draft <<< "$release")" == false && "$(jq -r .prerelease <<< "$release")" == false ]]
+            tag_sha="$(gh api "repos/$REPOSITORY/commits/$RELEASE_TAG" --jq .sha)"
+            [[ "$tag_sha" == "$SOURCE_SHA" ]]
+            complete="$(jq '[.assets[] | select((.name == "app.tar.gz" or .name == "app-manifest.json") and .state == "uploaded")] | length' <<< "$release")"
+            if [[ "$complete" == 2 ]]; then
+              mkdir existing
+              gh release download "$RELEASE_TAG" --repo "$REPOSITORY" --pattern app.tar.gz --pattern app-manifest.json --dir existing
+              python3 -c 'import sys; sys.path.insert(0,"bundle"); import package_app; d=package_app.verify("existing/app.tar.gz","existing/app-manifest.json"); assert d["commit"] == sys.argv[1]' "$SOURCE_SHA"
+              echo "verified completed stable bundle already exists; no overwrite"
+              exit 0
+            fi
+            # An incomplete upload cannot be activated. Remove only protocol assets
+            # from that incomplete attempt; never replace an already complete version.
+            while read -r asset_id; do
+              [[ -z "$asset_id" ]] || gh api --method DELETE "repos/$REPOSITORY/releases/assets/$asset_id"
+            done < <(jq -r '.assets[] | select(.name == "app.tar.gz" or .name == "app-manifest.json") | .id' <<< "$release")
+            gh release upload "$RELEASE_TAG" bundle/app.tar.gz bundle/app-manifest.json --repo "$REPOSITORY"
+            gh api --method GET "repos/$REPOSITORY/releases/$release_id" > release-after-upload.json
+            jq -e '[.assets[] | select((.name == "app.tar.gz" or .name == "app-manifest.json") and .state == "uploaded")] | length == 2' release-after-upload.json >/dev/null
+            mkdir readback
+            gh release download "$RELEASE_TAG" --repo "$REPOSITORY" --pattern app.tar.gz --pattern app-manifest.json --dir readback
+            python3 -c 'import sys; sys.path.insert(0,"bundle"); import package_app; assert package_app.verify("readback/app.tar.gz","readback/app-manifest.json")["commit"] == sys.argv[1]' "$SOURCE_SHA"
+            release_after="$(gh api "repos/$REPOSITORY/releases/tags/$RELEASE_TAG")"
+            [[ "$(jq -r .tag_name <<< "$release_after")" == "$RELEASE_TAG" && "$(jq -r .draft <<< "$release_after")" == false && "$(jq -r .prerelease <<< "$release_after")" == false ]]
+            [[ "$(gh api "repos/$REPOSITORY/commits/$RELEASE_TAG" --jq .sha)" == "$SOURCE_SHA" ]]
+          fi
