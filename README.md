@@ -39,7 +39,7 @@ The `pages.yml` workflow installs dependencies, runs unit/type/lint checks, buil
 
 Screen totals and PDF totals derive from line items and discounts. Authored optional subtotal amounts also appear in both renderers and must be reconciled with the line items. After editing approved content, check the browser page, generated PDF, and print preview.
 
-The quote summary uses a charcoal total card and a quieter aligned breakdown, with a 24px narrow / 32px wide gap before the overview cards. Print switches the total card to white with dark text and a compact two-column summary. Category titles and subtotal labels come from the JSON and are shared with the PDF; use descriptive names rather than section letters.
+The quote summary uses a charcoal total card and a quieter aligned breakdown, with a 24px narrow / 32px wide gap before the overview cards. Print switches the total card to white with dark text and a compact two-column summary. Category titles and subtotal labels come from the JSON and are shared with the PDF; use descriptive names rather than section letters. Summary cards derive pre-discount amounts from line items and strike them through only where an actual reduction exists. Discounted amounts remain primary, with explicit before/after text for assistive technology and the existing savings row retained. The downloadable PDF keeps its existing itemised gross/discount/net presentation.
 
 ## Pages base path
 
