@@ -15,10 +15,10 @@ jobs:
           cache: npm
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
       - name: Validate workflow definitions
         run: docker run --rm -v "$GITHUB_WORKSPACE:/repo:ro" -w /repo rhysd/actionlint:latest@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667 .github/workflows/app-bundles.yml .github/workflows/bundle-checks.yml
-      - run: python3 -m unittest discover -s tests -p test_bundle.py -v
+      - run: python3 -m unittest discover -s tests -p 'test_*.py' -v
       - run: npm ci
       - run: npm run build
         env:

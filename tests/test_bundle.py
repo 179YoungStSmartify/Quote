@@ -85,6 +85,40 @@ class BundleTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "unsafe"):
             package_app.verify(archive, manifest)
 
+    def test_rejects_noninteger_schema_and_duplicate_json_keys(self):
+        archive, manifest = package_app.package(self.dist, self.root / "out", "a" * 40)
+        for raw in (
+            manifest.read_text().replace('"schema":1', '"schema":true'),
+            manifest.read_text().replace('"schema":1', '"schema":1.0'),
+            manifest.read_text().replace('"schema":1', '"schema":99,"schema":1'),
+        ):
+            manifest.write_text(raw)
+            with self.assertRaises(ValueError):
+                package_app.verify(archive, manifest)
+
+    def test_rejects_missing_assets_content(self):
+        (self.dist / "assets/app.js").unlink()
+        (self.dist / "assets").rmdir()
+        with self.assertRaisesRegex(ValueError, "assets"):
+            package_app.package(self.dist, self.root / "out", "a" * 40)
+
+    def test_rejects_noncanonical_and_duplicate_archive_names(self):
+        import io
+        import tarfile
+        archive, manifest = package_app.package(self.dist, self.root / "out", "a" * 40)
+        for aliases in (("index.html", "./index.html"), ("assets/app.js", "assets//app.js")):
+            with tarfile.open(archive, "w:gz") as tar:
+                for name in ("index.html", "assets/app.js", "quote.pdf", aliases[1]):
+                    info = tarfile.TarInfo(name)
+                    payload = b"x"
+                    info.size = len(payload)
+                    tar.addfile(info, io.BytesIO(payload))
+            data = json.loads(manifest.read_text())
+            data["sha256"] = hashlib.sha256(archive.read_bytes()).hexdigest()
+            manifest.write_text(json.dumps(data))
+            with self.assertRaises(ValueError):
+                package_app.verify(archive, manifest)
+
 
 if __name__ == "__main__":
     unittest.main()

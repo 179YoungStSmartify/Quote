@@ -13,7 +13,11 @@ SAFE_PART = re.compile(r"^[A-Za-z0-9._-]+$")
 
 
 def _safe_name(name):
+    if not isinstance(name, str) or not name or name.startswith("./") or "//" in name:
+        raise ValueError(f"noncanonical path: {name}")
     path = PurePosixPath(name)
+    if path.as_posix() != name:
+        raise ValueError(f"noncanonical path: {name}")
     if path.is_absolute() or not path.parts or any(
         part in (".", "..") or not SAFE_PART.fullmatch(part) for part in path.parts
     ):
@@ -40,6 +44,8 @@ def _validate_tree(dist):
             raise ValueError(f"missing required file: {required}")
     if not files["quote.pdf"].read_bytes().startswith(b"%PDF-"):
         raise ValueError("quote.pdf is not a PDF")
+    if not any(name.startswith("assets/") and len(PurePosixPath(name).parts) > 1 for name in files):
+        raise ValueError("missing required assets/ content")
     html = files["index.html"].read_text(encoding="utf-8")
     if re.search(r"(?:/Quote/|\./Quote/|\bbase=\"/Quote/)", html, re.IGNORECASE):
         raise ValueError("index.html contains a non-root base path")
@@ -85,10 +91,17 @@ def package(dist, output_dir, commit):
 
 def verify(archive, manifest):
     archive, manifest = Path(archive), Path(manifest)
-    data = json.loads(manifest.read_text(encoding="utf-8"))
+    def unique_object(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError(f"duplicate manifest key: {key}")
+            result[key] = value
+        return result
+    data = json.loads(manifest.read_text(encoding="utf-8"), object_pairs_hook=unique_object)
     if set(data) != {"schema", "commit", "sha256", "bundle", "base_path"}:
         raise ValueError("manifest fields do not match schema 1")
-    if data["schema"] != 1 or data["bundle"] != "app.tar.gz" or data["base_path"] != "/":
+    if type(data["schema"]) is not int or data["schema"] != 1 or type(data["bundle"]) is not str or data["bundle"] != "app.tar.gz" or type(data["base_path"]) is not str or data["base_path"] != "/":
         raise ValueError("manifest protocol values are invalid")
     if not isinstance(data["commit"], str) or not SHA_RE.fullmatch(data["commit"]):
         raise ValueError("manifest commit is invalid")
@@ -99,14 +112,16 @@ def verify(archive, manifest):
     names = set()
     with tarfile.open(archive, "r:gz") as tar:
         for member in tar:
-            _safe_name(member.name)
+            canonical = _safe_name(member.name).as_posix()
             if not member.isfile():
                 raise ValueError(f"unsafe archive entry type: {member.name}")
-            if member.name in names:
+            if canonical in names:
                 raise ValueError(f"duplicate archive entry: {member.name}")
-            names.add(member.name)
+            names.add(canonical)
         if not {"index.html", "quote.pdf"}.issubset(names):
             raise ValueError("archive missing index.html or quote.pdf")
+        if not any(name.startswith("assets/") for name in names):
+            raise ValueError("archive missing required assets/ content")
     return data
 
 
