@@ -57,6 +57,37 @@ Then run `npm ci` in this repository, inspect the snapshot and provenance diff, 
 
 See [AGENTS.md](AGENTS.md) for public-safe maintenance instructions.
 
+## Docker deployment (for Sam)
+
+- **Production:** `:release` follows stable Quote releases.
+- **Testing:** `:main` follows tested `main` builds.
+
+```sh
+# Sign in with GHCR package read access.
+docker login ghcr.io
+
+# Production → localhost:8081
+docker run -d --name quote-release --restart unless-stopped \
+  -p 127.0.0.1:8081:8080 -v quote-release-data:/data \
+  -e APP_REPO=179YoungStSmartify/Quote -e POLL_INTERVAL_SECONDS=300 \
+  -e GITHUB_TOKEN ghcr.io/perspectiveliving/static-app-host:release
+
+# Testing → localhost:8080
+docker run -d --name quote-main --restart unless-stopped \
+  -p 127.0.0.1:8080:8080 -v quote-main-data:/data \
+  -e APP_REPO=179YoungStSmartify/Quote -e POLL_INTERVAL_SECONDS=300 \
+  -e GITHUB_TOKEN ghcr.io/perspectiveliving/static-app-host:main
+```
+
+Proxy each hostname to its localhost port, serving `/` (not `/Quote/`). For a containerized proxy, use a shared Docker network instead—see the reference below.
+
+- App updates are automatic; failed updates keep the last working version.
+- Keep the separate `/data` volumes when replacing containers.
+- `GITHUB_TOKEN` is optional for the public app repo; the commands forward it if already exported. It is separate from GHCR login.
+- Check production readiness: `curl --fail http://localhost:8081/__host/ready`.
+
+[Networking, health checks, token details and upgrades →](docs/docker-deployment.md)
+
 ## Mobile item layout
 
 The quote uses stacked item cards through 1024px and the original semantic table on desktop and paper. Both views derive from `src/quote.json` and show the same interim/gross subtotals, discounts, section totals, and grand total. Item names wrap while currency amounts stay intact. Validate 320, 360, 375, 390, 430, 768, 1024, and 1440px in portrait and landscape, with enlarged text, minimum 44px touch targets, and no sideways panning for essential quote details.

@@ -1,0 +1,31 @@
+name: Container bundle checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate workflow definitions
+        run: docker run --rm -v "$GITHUB_WORKSPACE:/repo:ro" -w /repo rhysd/actionlint:latest@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667 .github/workflows/app-bundles.yml .github/workflows/bundle-checks.yml
+      - run: python3 -m unittest discover -s tests -p 'test_*.py' -v
+      - run: npm ci
+      - run: npm run build
+        env:
+          VITE_BASE_PATH: /
+      - run: npx playwright install --with-deps chromium
+      - run: node scripts/root-smoke.mjs dist
+      - name: Package and verify root bundle
+        run: |
+          python3 scripts/package_app.py package --dist dist --output bundle --commit "$(git rev-parse HEAD)"
+          python3 scripts/package_app.py verify --archive bundle/app.tar.gz --manifest bundle/app-manifest.json
