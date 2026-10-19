@@ -310,10 +310,21 @@ export default function App() {
           {Object.entries(q.inclusions).map(([heading, items]) => (
             <Card key={heading}>
               <h3>{heading[0].toUpperCase() + heading.slice(1)}</h3>
-              <ul className="list">
-                {items.map((x) => (
-                  <li key={x}>{x}</li>
-                ))}
+              <ul className="list inclusion-list">
+                {items.map((item) =>
+                  typeof item === "string" ? (
+                    <li key={item}>{item}</li>
+                  ) : (
+                    <li className="inclusion-group" key={item.label}>
+                      <strong>{item.label}</strong>
+                      <ul className="inclusion-sublist">
+                        {item.items.map((child) => (
+                          <li key={child}>{child}</li>
+                        ))}
+                      </ul>
+                    </li>
+                  ),
+                )}
               </ul>
             </Card>
           ))}

@@ -54,7 +54,42 @@ describe("Hazal quote", () => {
     expect(quote.inclusions.integrations).toContain(
       "Voice assistant with Chinese spoken-language understanding",
     );
-    expect(quote.inclusions.dashboards.join(" ")).toContain("NeoPlan3D");
+    expect(JSON.stringify(quote.inclusions.dashboards)).toContain("NeoPlan3D");
+  });
+  it("renders grouped inclusions and retains flat integrations", () => {
+    expect(quote.inclusions.dashboards).toEqual([
+      {
+        label: '15.6" and 10" displays',
+        items: [
+          "1 main dashboard for an at-a-glance view of the home.",
+          "1 area-based dashboard.",
+          'NeoPlan3D interactive 3D floor plan on the 15.6" display.',
+        ],
+      },
+      {
+        label: '4" displays',
+        items: [
+          "1 Home Assistant dashboard for the display's area.",
+          "1 scene-control dashboard.",
+        ],
+      },
+      { label: "Mobile", items: ["1 mobile dashboard per account/person."] },
+    ]);
+    expect(quote.inclusions.automations).toEqual([
+      {
+        label: "10 automations, including:",
+        items: [
+          "Away scene: lights turn on and off at random while no one is home.",
+          '"I\'m home" scene.',
+          '"I\'m leaving" scene.',
+          "Movie scene.",
+          "Night-time sentry mode.",
+        ],
+      },
+    ]);
+    expect(
+      quote.inclusions.integrations.every((item) => typeof item === "string"),
+    ).toBe(true);
   });
   it("uses only client-facing Smart home and Network headings", () => {
     expect(quote.sections.map((s) => s.title)).toEqual([

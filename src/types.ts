@@ -17,6 +17,7 @@ export type QuoteSection = {
   grossSubtotal: { label: string; amountCents: number } | null;
   finalLabel: string | null;
 };
+export type QuoteInclusion = string | { label: string; items: string[] };
 export type QuoteData = {
   currency: string;
   quoteId: string;
@@ -28,7 +29,7 @@ export type QuoteData = {
   scopeIntroduction: string;
   discountSummary: string;
   sections: QuoteSection[];
-  inclusions: Record<string, string[]>;
+  inclusions: Record<string, QuoteInclusion[]>;
   terms: string[];
   hyperCare: string;
   warranty: string;

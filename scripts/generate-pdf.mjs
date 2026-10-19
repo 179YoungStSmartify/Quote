@@ -200,18 +200,33 @@ text(
 y -= 12;
 title("Included experience");
 for (const [label, items] of Object.entries(quote.inclusions)) {
+  ensure(60);
   y -= 6;
   text(label.charAt(0).toUpperCase() + label.slice(1), { size: 12, b: true });
-  for (const item of items) text("- " + item, { size: 9, indent: 8, gap: 5 });
+  for (const item of items) {
+    if (typeof item === "string") {
+      text("- " + item, { size: 9, indent: 8, gap: 5 });
+    } else {
+      ensure(40);
+      text("- " + item.label, { size: 9, b: true, indent: 8, gap: 5 });
+      for (const child of item.items)
+        text("- " + child, { size: 9, indent: 22, gap: 5 });
+    }
+  }
 }
+// Avoid starting the terms block in a short tail after expanded inclusions.
+ensure(240);
 y -= 12;
 title("Notes and terms");
 for (const item of quote.terms)
   text("- " + item, { size: 9, indent: 8, gap: 6 });
+ensure(60);
 text("Hyper-care", { size: 11, b: true });
 text(quote.hyperCare, { size: 9 });
+ensure(60);
 text("Hardware warranty", { size: 11, b: true });
 text(quote.warranty, { size: 9 });
+ensure(60);
 text("Acceptance", { size: 11, b: true });
 text(quote.signing, { size: 9 });
 text("Accepted by: __________________________    Date: ____ / ____ / ______", {
