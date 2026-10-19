@@ -102,9 +102,25 @@
   ],
   "inclusions": {
     "dashboards": [
-      "15.6\" and 10\" displays: 1 main dashboard (at-a-glance view of the home); NeoPlan3D interactive 3D floor plan, on the 15.6\" display; 1 area-based dashboard.",
-      "4\" displays: 1 Home Assistant dashboard for that display's area; 1 scene control dashboard.",
-      "Mobile: 1 mobile dashboard per account/person."
+      {
+        "label": "15.6\" and 10\" displays",
+        "items": [
+          "1 main dashboard for an at-a-glance view of the home.",
+          "1 area-based dashboard.",
+          "NeoPlan3D interactive 3D floor plan on the 15.6\" display."
+        ]
+      },
+      {
+        "label": "4\" displays",
+        "items": [
+          "1 Home Assistant dashboard for the display's area.",
+          "1 scene-control dashboard."
+        ]
+      },
+      {
+        "label": "Mobile",
+        "items": ["1 mobile dashboard per account/person."]
+      }
     ],
     "integrations": [
       "Air conditioning",
@@ -115,7 +131,16 @@
       "Client network and separate IoT network setup"
     ],
     "automations": [
-      "10 automations, including: Away scene — lights turn on and off at random when no one is home; I'm home / I'm leaving scenes; Movie scene; Night-time sentry mode."
+      {
+        "label": "10 automations, including:",
+        "items": [
+          "Away scene: lights turn on and off at random while no one is home.",
+          "\"I'm home\" scene.",
+          "\"I'm leaving\" scene.",
+          "Movie scene.",
+          "Night-time sentry mode."
+        ]
+      }
     ]
   },
   "terms": [

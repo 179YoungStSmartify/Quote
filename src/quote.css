@@ -142,6 +142,15 @@
   border-radius: 8px;
   font-weight: 600;
 }
+.inclusion-list {
+  list-style-type: disc;
+  overflow-wrap: anywhere;
+}
+.inclusion-sublist {
+  list-style-type: circle;
+  padding-left: 20px;
+  margin: 6px 0 12px;
+}
 .terms {
   max-width: 900px;
 }
