@@ -31,6 +31,9 @@ The `pages.yml` workflow installs dependencies, runs unit/type/lint checks, buil
 ## Source and content
 
 - `src/quote.json`: structured content used by the React page and PDF generator.
+- Quote validity: `validUntil` drives an expiry banner on the page, an expiry
+  note in the PDF, and a `check:expiry` CI gate. Refresh `quoteDate` and
+  `validUntil` whenever quote content is approved afresh.
 - `src/types.ts`: `QuoteData` type contract.
 - `src/App.tsx`: interactive page rendering and total calculations.
 - `src/quote.css`: quote-specific styles; shared tokens and print rules are in `vendor/react-ui/src/styles.css`.

@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import { Shell, Section, Card } from "@perspective-living/react-ui";
 import quoteData from "./quote.json";
 import type { QuoteData } from "./types";
+import { quoteExpiryStatus } from "./quoteExpiry";
 const q = quoteData as QuoteData;
 const cents = (n: number) =>
   new Intl.NumberFormat("en-AU", {
@@ -24,6 +25,7 @@ const total = q.sections.reduce((sum, s) => sum + sectionTotal(s), 0),
     0,
   );
 export default function App() {
+  const status = quoteExpiryStatus(q.validUntil);
   return (
     <Shell>
       <div className="hero" id="overview">
@@ -54,6 +56,17 @@ export default function App() {
           <span>PREPARED {q.quoteDate}</span>
           <span>VALID UNTIL {q.validUntil}</span>
         </div>
+        {status === "expiring" && (
+          <p className="expiry-banner expiry-banner--expiring" role="status">
+            This quote expires soon — still valid until {q.validUntil}.
+          </p>
+        )}
+        {status === "expired" && (
+          <p className="expiry-banner expiry-banner--expired" role="alert">
+            This quote expired on {q.validUntil}. Contact {q.preparedBy} for
+            refreshed pricing.
+          </p>
+        )}
       </div>
       <section className="section quote-summary" aria-label="Quote summary">
         <h2>Quote summary</h2>

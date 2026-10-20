@@ -103,6 +103,21 @@ text(
     quote.validUntil,
   { size: 9, color: rgb(0.42, 0.4, 0.36) },
 );
+{
+  const [day, month, year] = String(quote.validUntil).split("/").map(Number);
+  // End of the expiry day in Brisbane (AEST, UTC+10, no daylight saving).
+  const endOfDay =
+    day && month && year
+      ? new Date(year, month - 1, day, 23, 59, 59).getTime() + 36000000
+      : null;
+  if (endOfDay !== null && endOfDay < Date.now())
+    text(
+      "NOTE: This quote expired on " +
+        quote.validUntil +
+        ". Request refreshed pricing.",
+      { size: 9, b: true, color: rgb(0.55, 0.12, 0.1) },
+    );
+}
 y -= 10;
 text("A thoughtful foundation for connected living", {
   size: 24,
