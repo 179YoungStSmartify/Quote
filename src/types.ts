@@ -18,6 +18,11 @@ export type QuoteSection = {
   finalLabel: string | null;
 };
 export type QuoteInclusion = string | { label: string; items: string[] };
+export type QuotePresentation = {
+  heroHeadline: string;
+  heroSubheading: string;
+  currencyNote: string;
+};
 export type QuoteData = {
   currency: string;
   quoteId: string;
@@ -26,6 +31,7 @@ export type QuoteData = {
   quoteDate: string;
   validUntil: string;
   preparedBy: string;
+  presentation: QuotePresentation;
   scopeIntroduction: string;
   discountSummary: string;
   sections: QuoteSection[];

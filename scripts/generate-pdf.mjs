@@ -104,17 +104,18 @@ text(
   { size: 9, color: rgb(0.42, 0.4, 0.36) },
 );
 y -= 10;
-text("A thoughtful foundation for connected living", {
+text(quote.presentation.heroHeadline, {
   size: 24,
   b: true,
   color: rgb(0.13, 0.12, 0.1),
   gap: 14,
 });
+text(quote.presentation.heroSubheading, { size: 10, gap: 10 });
 text("Prepared by " + quote.preparedBy, { size: 11 });
 rule();
 title("Scope and investment");
 text(quote.scopeIntroduction, { size: 10 });
-text("All amounts are in AUD.", { size: 9, color: rgb(0.42, 0.4, 0.36) });
+text(quote.presentation.currencyNote, { size: 9, color: rgb(0.42, 0.4, 0.36) });
 for (const s of quote.sections) {
   ensure(60);
   text(s.title, { size: 13, b: true, color: rgb(0.4, 0.31, 0.17), gap: 8 });

@@ -139,4 +139,27 @@ describe("Hazal quote", () => {
     expect(data).toContain("2 years, hardware only");
     expect(data).not.toMatch(restricted);
   });
+  it("sources hero and currency copy from quote.json in both renderers", () => {
+    const app = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
+    const pdf = readFileSync(
+      new URL("../scripts/generate-pdf.mjs", import.meta.url),
+      "utf8",
+    );
+    expect(quote.presentation).toEqual({
+      heroHeadline: "A thoughtful foundation for connected living.",
+      heroSubheading:
+        "Clear scope for a considered smart home and a separately priced network.",
+      currencyNote: "All amounts are in AUD.",
+    });
+    expect(app).not.toContain("A thoughtful foundation for connected living");
+    expect(app).not.toContain("Clear scope for a considered smart home");
+    expect(app).not.toContain("All amounts are in AUD");
+    expect(app).toContain("q.presentation.heroHeadline");
+    expect(app).toContain("q.presentation.heroSubheading");
+    expect(app).toContain("q.presentation.currencyNote");
+    expect(pdf).toContain("quote.presentation.heroHeadline");
+    expect(pdf).toContain("quote.presentation.heroSubheading");
+    expect(pdf).toContain("quote.presentation.currencyNote");
+    expect(pdf).not.toContain('"All amounts are in AUD."');
+  });
 });
