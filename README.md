@@ -6,7 +6,7 @@ This repository is a public GitHub Pages application built from the quote templa
 
 - Keep source, docs, examples, and public assets safe for anyone to read. Only the expressly approved client-facing quote data belongs here; do not add unapproved client identifiers, addresses or scope. Never commit internal costing, credentials, or recipient-specific links.
 - Only publish approved quote content. Static files and build output are not an access-controlled delivery channel.
-- Signing integration is deferred. Do not put signing credentials, recipient tokens, or private acceptance URLs in source or static assets.
+- Do not put credentials, tokens, or recipient-specific private links in source or static assets.
 - Preserve the Pages path exactly as `/Quote/` unless the repository/hosting path is intentionally changed together with Vite configuration and workflow.
 
 ## Commands
@@ -15,18 +15,18 @@ Use Node.js 22 and npm from this directory:
 
 ```sh
 npm ci
+npx playwright install chromium
 npm run dev
 npm run typecheck
 npm run lint
 npm test
 VITE_BASE_PATH=/Quote/ npm run build
-npx playwright install chromium
 npm run test:e2e
 npm run preview
 npm run pdf
 ```
 
-The `pages.yml` workflow installs dependencies, runs unit/type/lint checks, builds with `VITE_BASE_PATH: /Quote/`, installs Playwright Chromium with system dependencies, runs browser checks, then publishes `dist/` through GitHub Pages. `quality.yml` runs the standard quality checks on pushes and pull requests. `npm run build` also generates `dist/quote.pdf`; `npm run pdf` runs the PDF generator directly. The site includes an in-browser print action as well.
+Install Chromium before tests or builds (`npm ci` then `npx playwright install chromium`; use `--with-deps` in CI). `npm run build` typechecks and invokes the PDF script, which builds the website and writes `dist/quote.pdf`. Standalone `npm run pdf` also rebuilds the website before exporting. Browser **Print quote** still invokes `window.print()`.
 
 ## Source and content
 
@@ -39,7 +39,7 @@ The `pages.yml` workflow installs dependencies, runs unit/type/lint checks, buil
 
 Screen totals and PDF totals derive from line items and discounts. Authored optional subtotal amounts also appear in both renderers and must be reconciled with the line items. After editing approved content, check the browser page, generated PDF, and print preview.
 
-The quote summary uses a charcoal total card and a quieter aligned breakdown, with a 24px narrow / 32px wide gap before the overview cards. Print switches the total card to white with dark text and a compact two-column summary. Category titles and subtotal labels come from the JSON and are shared with the PDF; use descriptive names rather than section letters. Summary cards derive pre-discount amounts from line items and strike them through only where an actual reduction exists. Discounted amounts remain primary, with explicit before/after text for assistive technology and the existing savings row retained. The downloadable PDF keeps its existing itemised gross/discount/net presentation.
+The quote summary uses a charcoal total card and a quieter aligned breakdown, with a 24px narrow / 32px wide gap before the overview cards. Print switches the total card to white with dark text and a compact two-column summary. Category titles and subtotal labels come from the JSON and are shared with the PDF; use descriptive names rather than section letters. Summary cards derive pre-discount amounts from line items and strike them through only where an actual reduction exists. Discounted amounts remain primary, with explicit before/after text for assistive technology and the existing savings row retained. The downloadable PDF uses the same print layout, including the summary and totals.
 
 ## Pages base path
 

@@ -101,6 +101,12 @@ describe("Hazal quote", () => {
       "Network total",
     ]);
   });
+  it("keeps signing content out while retaining terms, warranty, and totals", () => {
+    expect(quote).not.toHaveProperty("signing");
+    expect(quote.hyperCare).toContain("60 days");
+    expect(quote.warranty).toContain("2 years, hardware only");
+    expect(quote.sections.reduce((a, s) => a + subtotal(s), 0)).toBe(1545320);
+  });
   it("styles the summary total hierarchy and responsive summary boundary", () => {
     const app = readFileSync(
       new URL("../src/App.tsx", import.meta.url),
@@ -120,7 +126,7 @@ describe("Hazal quote", () => {
     expect(css).toMatch(/\.quote-summary dt[\s\S]*?text-align:\s*left/);
     expect(css).toMatch(/\.quote-summary dd[\s\S]*?text-align:\s*right/);
   });
-  it("keeps signing deferred and excludes internal commercial information", () => {
+  it("excludes internal commercial information", () => {
     const data = JSON.stringify(quote),
       restricted = new RegExp(
         [
@@ -134,7 +140,6 @@ describe("Hazal quote", () => {
         ].join("|"),
         "i",
       );
-    expect(data).toContain("Signing integration deferred");
     expect(data).toContain("60 days");
     expect(data).toContain("2 years, hardware only");
     expect(data).not.toMatch(restricted);

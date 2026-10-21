@@ -346,13 +346,6 @@ export default function App() {
             <p>{q.warranty}</p>
           </Card>
         </div>
-        <Card className="deferred">
-          <h3>Acceptance</h3>
-          <p>{q.signing}</p>
-          <p>
-            Accepted by: __________________________　 Date: ____ / ____ / ______
-          </p>
-        </Card>
       </Section>
       <div className="actions no-print">
         <a className="button" href="./quote.pdf" download={`${q.quoteId}.pdf`}>
