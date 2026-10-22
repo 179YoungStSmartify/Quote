@@ -32,7 +32,7 @@ export function isQuoteExpired(
   return nowMs > parsed.expiresAtMs;
 }
 
-export type QuoteExpiryStatus = "active" | "expiring" | "expired";
+export type QuoteExpiryStatus = "active" | "expiring" | "expired" | "invalid";
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -41,7 +41,7 @@ export function quoteExpiryStatus(
   nowMs: number = Date.now(),
 ): QuoteExpiryStatus {
   const parsed = parseQuoteValidUntil(validUntil);
-  if ("error" in parsed) return "active";
+  if ("error" in parsed) return "invalid";
   const remaining = parsed.expiresAtMs - nowMs;
   if (remaining < 0) return "expired";
   if (remaining <= SEVEN_DAYS_MS) return "expiring";

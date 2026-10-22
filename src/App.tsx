@@ -61,6 +61,12 @@ export default function App() {
             This quote expires soon — still valid until {q.validUntil}.
           </p>
         )}
+        {status === "invalid" && (
+          <p className="expiry-banner expiry-banner--expired" role="alert">
+            Quote validity date is invalid. Contact {q.preparedBy} to confirm
+            current pricing.
+          </p>
+        )}
         {status === "expired" && (
           <p className="expiry-banner expiry-banner--expired" role="alert">
             This quote expired on {q.validUntil}. Contact {q.preparedBy} for
@@ -359,13 +365,6 @@ export default function App() {
             <p>{q.warranty}</p>
           </Card>
         </div>
-        <Card className="deferred">
-          <h3>Acceptance</h3>
-          <p>{q.signing}</p>
-          <p>
-            Accepted by: __________________________　 Date: ____ / ____ / ______
-          </p>
-        </Card>
       </Section>
       <div className="actions no-print">
         <a className="button" href="./quote.pdf" download={`${q.quoteId}.pdf`}>

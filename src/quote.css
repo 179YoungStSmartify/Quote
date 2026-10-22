@@ -174,14 +174,6 @@
 .terms {
   max-width: 900px;
 }
-.deferred {
-  margin-top: 20px;
-}
-.deferred p:last-child {
-  overflow-wrap: anywhere;
-  font-size: 14px;
-  color: var(--muted);
-}
 /* Phone-first item cards keep every price visible without sideways panning. */
 .mobile-items {
   display: block;
@@ -346,6 +338,7 @@
   h2,
   h3 {
     break-after: avoid;
+    break-inside: avoid;
   }
   tfoot {
     display: table-row-group;

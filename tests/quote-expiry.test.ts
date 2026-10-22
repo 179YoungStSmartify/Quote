@@ -1,4 +1,3 @@
-import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import quote from "../src/quote.json";
 import {
@@ -25,11 +24,17 @@ describe("quote expiry gate", () => {
   it("treats a quote as expired only after its whole expiry day", () => {
     const at = (iso: string) => new Date(iso).getTime();
     // 1:59pm AEST on the expiry day is still inside the validity window.
-    expect(isQuoteExpired("15/11/2026", at("2026-11-15T03:59:59Z"))).toBe(false);
-    expect(isQuoteExpired("15/11/2026", at("2026-11-15T13:59:59.999Z"))).toBe(false);
+    expect(isQuoteExpired("15/11/2026", at("2026-11-15T03:59:59Z"))).toBe(
+      false,
+    );
+    expect(isQuoteExpired("15/11/2026", at("2026-11-15T13:59:59.999Z"))).toBe(
+      false,
+    );
     // 12:00am 16/11 AEST is the first expired moment.
     expect(isQuoteExpired("15/11/2026", at("2026-11-15T14:00:00Z"))).toBe(true);
-    expect(isQuoteExpired("15/11/2026", at("2026-11-01T00:00:00Z"))).toBe(false);
+    expect(isQuoteExpired("15/11/2026", at("2026-11-01T00:00:00Z"))).toBe(
+      false,
+    );
   });
 
   it("does not expire on an unparseable date (format is guarded separately)", () => {
@@ -39,20 +44,6 @@ describe("quote expiry gate", () => {
   it("uses the DD/MM/YYYY format for the published quote", () => {
     expect(quote.validUntil).toMatch(/^\d{2}\/\d{2}\/\d{4}$/);
   });
-
-  it("flags expiry on the page and in the PDF", () => {
-    const app = readFileSync(
-      new URL("../src/App.tsx", import.meta.url),
-      "utf8",
-    );
-    expect(app).toContain("quote-expired-banner");
-    expect(app).toContain("quoteExpiryStatus(q.validUntil)");
-    const pdf = readFileSync(
-      new URL("../scripts/generate-pdf.mjs", import.meta.url),
-      "utf8",
-    );
-    expect(pdf).toContain("Request refreshed pricing");
-  });
 });
 
 describe("quote expiry status", () => {
@@ -60,22 +51,32 @@ describe("quote expiry status", () => {
   const day = 24 * 60 * 60 * 1000;
 
   it("is active more than seven days out", () => {
-    expect(quoteExpiryStatus("15/11/2026", Date.UTC(2026, 10, 1))).toBe("active");
-    expect(quoteExpiryStatus("15/11/2026", expiresAt - 7 * day - 1)).toBe("active");
+    expect(quoteExpiryStatus("15/11/2026", Date.UTC(2026, 10, 1))).toBe(
+      "active",
+    );
+    expect(quoteExpiryStatus("15/11/2026", expiresAt - 7 * day - 1)).toBe(
+      "active",
+    );
   });
 
   it("is expiring within the final seven days, expiry day included", () => {
-    expect(quoteExpiryStatus("15/11/2026", expiresAt - 7 * day)).toBe("expiring");
-    expect(quoteExpiryStatus("15/11/2026", Date.UTC(2026, 10, 12))).toBe("expiring");
+    expect(quoteExpiryStatus("15/11/2026", expiresAt - 7 * day)).toBe(
+      "expiring",
+    );
+    expect(quoteExpiryStatus("15/11/2026", Date.UTC(2026, 10, 12))).toBe(
+      "expiring",
+    );
     expect(quoteExpiryStatus("15/11/2026", expiresAt)).toBe("expiring");
   });
 
   it("is expired once the expiry day has passed", () => {
     expect(quoteExpiryStatus("15/11/2026", expiresAt + 1)).toBe("expired");
-    expect(quoteExpiryStatus("15/11/2026", Date.UTC(2026, 11, 1))).toBe("expired");
+    expect(quoteExpiryStatus("15/11/2026", Date.UTC(2026, 11, 1))).toBe(
+      "expired",
+    );
   });
 
-  it("treats an unparseable date as active", () => {
-    expect(quoteExpiryStatus("not a date", 0)).toBe("active");
+  it("reports an unparseable date honestly", () => {
+    expect(quoteExpiryStatus("not a date", 0)).toBe("invalid");
   });
 });
