@@ -101,6 +101,12 @@ describe("Hazal quote", () => {
       "Network total",
     ]);
   });
+  it("keeps signing content out while retaining terms, warranty, and totals", () => {
+    expect(quote).not.toHaveProperty("signing");
+    expect(quote.hyperCare).toContain("60 days");
+    expect(quote.warranty).toContain("2 years, hardware only");
+    expect(quote.sections.reduce((a, s) => a + subtotal(s), 0)).toBe(1545320);
+  });
   it("styles the summary total hierarchy and responsive summary boundary", () => {
     const app = readFileSync(
       new URL("../src/App.tsx", import.meta.url),
@@ -120,7 +126,7 @@ describe("Hazal quote", () => {
     expect(css).toMatch(/\.quote-summary dt[\s\S]*?text-align:\s*left/);
     expect(css).toMatch(/\.quote-summary dd[\s\S]*?text-align:\s*right/);
   });
-  it("keeps signing deferred and excludes internal commercial information", () => {
+  it("excludes internal commercial information", () => {
     const data = JSON.stringify(quote),
       restricted = new RegExp(
         [
@@ -134,13 +140,15 @@ describe("Hazal quote", () => {
         ].join("|"),
         "i",
       );
-    expect(data).toContain("Signing integration deferred");
     expect(data).toContain("60 days");
     expect(data).toContain("2 years, hardware only");
     expect(data).not.toMatch(restricted);
   });
   it("sources hero and currency copy from quote.json in both renderers", () => {
-    const app = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
+    const app = readFileSync(
+      new URL("../src/App.tsx", import.meta.url),
+      "utf8",
+    );
     const pdf = readFileSync(
       new URL("../scripts/generate-pdf.mjs", import.meta.url),
       "utf8",
@@ -157,9 +165,8 @@ describe("Hazal quote", () => {
     expect(app).toContain("q.presentation.heroHeadline");
     expect(app).toContain("q.presentation.heroSubheading");
     expect(app).toContain("q.presentation.currencyNote");
-    expect(pdf).toContain("quote.presentation.heroHeadline");
-    expect(pdf).toContain("quote.presentation.heroSubheading");
-    expect(pdf).toContain("quote.presentation.currencyNote");
-    expect(pdf).not.toContain('"All amounts are in AUD."');
+    expect(pdf).not.toContain("presentation");
+    expect(pdf).toContain("await page.pdf");
+    expect(pdf).toContain('page.emulateMedia({ media: "print" })');
   });
 });

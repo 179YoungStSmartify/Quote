@@ -39,5 +39,4 @@ export type QuoteData = {
   terms: string[];
   hyperCare: string;
   warranty: string;
-  signing: string;
 };

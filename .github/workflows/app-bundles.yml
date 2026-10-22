@@ -119,6 +119,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npx playwright install --with-deps chromium
       - run: python3 -m unittest discover -s "$BUNDLE_TOOLS/tests" -p test_bundle.py
       - run: npm test
       - run: npm run typecheck
@@ -126,7 +127,6 @@ jobs:
       - run: npm run build
         env:
           VITE_BASE_PATH: /Quote/
-      - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
       - name: Build root-hosted app and run root browser smoke
         env:
