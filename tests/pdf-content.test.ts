@@ -50,6 +50,9 @@ it("PDF uses the React print page and preserves approved facts without signing",
       "1 scene-control dashboard.",
       "1 mobile dashboard per account/person.",
       "hardware only",
+      "A thoughtful foundation for connected living.",
+      "Clear scope for a considered smart home and a separately priced network.",
+      "All amounts are in AUD.",
     ])
       expect(text).toContain(fact);
     expect(text).not.toMatch(

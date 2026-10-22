@@ -6,6 +6,11 @@
   "quoteDate": "16/10/2026",
   "validUntil": "15/11/2026",
   "preparedBy": "Perspective Living",
+  "presentation": {
+    "heroHeadline": "A thoughtful foundation for connected living.",
+    "heroSubheading": "Clear scope for a considered smart home and a separately priced network.",
+    "currencyNote": "All amounts are in AUD."
+  },
   "scopeIntroduction": "Five displays: one large, two medium and two small. Smart home and network are itemised separately.",
   "sections": [
     {

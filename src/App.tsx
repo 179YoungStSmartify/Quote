@@ -32,11 +32,8 @@ export default function App() {
         <span className="eyebrow">
           Project quote · prepared for {q.preparedFor}
         </span>
-        <h1>A thoughtful foundation for connected living.</h1>
-        <p>
-          Clear scope for a considered smart home and a separately priced
-          network.
-        </p>
+        <h1>{q.presentation.heroHeadline}</h1>
+        <p>{q.presentation.heroSubheading}</p>
         <div className="actions">
           <a
             className="button light"
@@ -319,7 +316,7 @@ export default function App() {
             <strong>{cents(total)}</strong>
           </p>
         </div>
-        <p className="currency-note">All amounts are in AUD.</p>
+        <p className="currency-note">{q.presentation.currencyNote}</p>
         <p className="saving">
           {q.discountSummary}: {cents(discount)}
         </p>
