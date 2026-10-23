@@ -9,6 +9,7 @@ jobs:
         with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - run: npm run check:expiry
       - run: npm test
       - run: npm run typecheck
       - run: npm run lint
