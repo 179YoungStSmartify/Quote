@@ -24,7 +24,7 @@ it("PDF uses the React print page and preserves approved facts without signing",
     expect(parsed.pages.length).toBeGreaterThan(0);
     for (const page of parsed.pages) {
       if (page.text.includes("Optional add-ons"))
-        expect(page.text).toContain("Repurpose existing wall tablet");
+        expect(page.text).toContain("Zeneva far-infrared sauna integration");
       if (page.text.includes("Phase 2 · not included"))
         expect(page.text).toContain("Additional automations");
       if (page.text.includes("Included experience"))
@@ -37,7 +37,8 @@ it("PDF uses the React print page and preserves approved facts without signing",
       "PL-HZL-179YS-0002-v2", "Hazal", "$13,626.00", "$12,350.00",
       "$1,276.00", "$8,570.00", "$3,780.00", "21 hours",
       "36 hours", "15 complimentary", '15.6"', '10"', '4"',
-      "6 automations", "NeoPlan3D", "$240.00", "$360.00",
+      "6 automations", "NeoPlan3D", "$360.00",
+      "existing client AirTouch tablet", "Home Assistant app", "no additional fee",
       "$299.00", "Phase 2", "90 days from issue", "supplier price changes notified before order",
       "A thoughtful foundation for connected living.",
       "Essential smart home and network, thoughtfully planned for your home.",
@@ -46,6 +47,8 @@ it("PDF uses the React print page and preserves approved facts without signing",
       expect(text).toContain(fact);
     expect(text).not.toMatch(/Before discount|Savings|\$0\.00|R&D|DRAFT|NOT ISSUED|GST|[\u4e00-\u9fff]/i);
     expect(text).not.toContain("$598.00");
+    expect(text).not.toContain("$240.00");
+    expect(text).not.toMatch(/paid conversion|re-locking|power loss/i);
     expect(text).not.toMatch(
       /Acceptance|Accepted by:|Signing integration|signature/i,
     );

@@ -47,6 +47,7 @@ describe("Hazal quote", () => {
         '1 area dashboard and 1 scene-control dashboard on the 4" display.',
       ]},
       { label: "Mobile", items: ["1 mobile dashboard per account/person."] },
+      { label: "Existing client AirTouch tablet", items: ["Install the Home Assistant app and configure a dashboard on the existing client AirTouch tablet, included in the existing 36-hour package at no additional fee. Subject to normal compatibility where the tablet supports the app."] },
     ]);
     expect(quote.inclusions.automations).toEqual([{
       label: "6 automations, agreed at project kickoff",

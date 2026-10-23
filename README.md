@@ -40,7 +40,7 @@ Install Chromium before tests or builds (`npm ci` then `npx playwright install c
 - `scripts/generate-pdf.mjs`: separate PDF rendering implementation.
 - `vendor/react-ui/`: vendored shared UI and its `SNAPSHOT-PROVENANCE.md`.
 
-Screen totals and PDF totals derive from base line items. Optional add-ons and Phase 2 are displayed separately and are excluded from the base total. Legacy discount rendering remains supported, but quotes with no monetary discount must not show struck-through originals or a savings row. After editing approved content, check browser page, generated PDF, and print preview.
+Screen totals and PDF totals derive from base line items. The sauna is the only optional add-on; Phase 2 is displayed separately and excluded from the base total. The existing client AirTouch tablet app installation and dashboard configuration are included in the 36-hour package and are not supplied hardware. Legacy discount rendering remains supported, but quotes with no monetary discount must not show struck-through originals or a savings row. After editing approved content, check browser page, generated PDF, and print preview.
 
 The quote summary uses a charcoal total card and a quieter aligned breakdown, with a 24px narrow / 32px wide gap before the overview cards. Print switches the total card to white with dark text and a compact two-column summary. Category titles and subtotal labels come from the JSON and are shared with the PDF; use descriptive names rather than section letters. Summary cards show pre-discount amounts and savings only when an actual monetary reduction exists; never emit a zero-savings row. The downloadable PDF uses the same print layout, including the summary and totals.
 

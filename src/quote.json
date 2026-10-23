@@ -105,7 +105,15 @@
       },
       {
         "label": "Mobile",
-        "items": ["1 mobile dashboard per account/person."]
+        "items": [
+          "1 mobile dashboard per account/person."
+        ]
+      },
+      {
+        "label": "Existing client AirTouch tablet",
+        "items": [
+          "Install the Home Assistant app and configure a dashboard on the existing client AirTouch tablet, included in the existing 36-hour package at no additional fee. Subject to normal compatibility where the tablet supports the app."
+        ]
       }
     ],
     "voiceControl": [
@@ -136,7 +144,7 @@
     "All prices are in AUD.",
     "The Essential smart-home package includes 36 hours of installation and setup: 15 hours complimentary and 21 hours billed. Work beyond 36 hours is charged separately at $180.00 per hour.",
     "Switch and in-wall display fitting requires a licensed electrician. Electrical work and new data cabling to display positions are not included and are quoted separately after a site visit.",
-    "Optional tablet and sauna add-ons are fixed prices outside the 36 hours. If extra time is needed, approval is obtained before any extra charge.",
+    "The existing client tablet Home Assistant app installation and dashboard configuration are included in the 36-hour package at no additional fee. Optional sauna integration is a fixed price outside the 36 hours. If additional time or work beyond the agreed scope or optional fixed price is needed, approval is obtained before any extra charge.",
     "Best-effort integrations depend on device and manufacturer support for Home Assistant. Unreliable integration is not charged as extra hours.",
     "Home Assistant remote access and cloud backup use a Nabu Casa subscription paid directly by the client.",
     "Voice control uses the client’s own Google accounts and requires internet; local/offline voice is not guaranteed.",
@@ -150,18 +158,6 @@
   "discountSummary": "You save",
   "status": "issued",
   "optionalAddons": [
-    {
-      "id": "tablet",
-      "title": "Repurpose existing wall tablet",
-      "amountCents": 24000,
-      "details": [
-        "AirTouch installed an Android wall tablet; subject to on-site checks of Android version, Google services and recovery after power loss.",
-        "The tablet must restart without re-locking to the vendor interface. If the site checks fail or reliable conversion is not viable, this optional fee does not apply.",
-        "Convert client-supplied tablet to an additional wall dashboard; about 1.5 hours.",
-        "Air-conditioning control moves into Home Assistant via AirTouch integration.",
-        "Tablet hardware is excluded from supplied-hardware warranty; configuration is covered by 60-day hyper-care. Defects in our work are not chargeable; out-of-scope work requires separate quote."
-      ]
-    },
     {
       "id": "sauna",
       "title": "Zeneva far-infrared sauna integration",
