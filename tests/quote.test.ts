@@ -7,13 +7,28 @@ const subtotal = (s: (typeof quote.sections)[number]) =>
   s.items.reduce((n, x) => n + line(x), 0) +
   (s.discount ? line(s.discount) : 0);
 describe("Hazal quote", () => {
+  it("itemises delivered labour and complimentary hours without changing totals", () => {
+    const smart = quote.sections[0];
+    const labour = smart.items[7];
+    expect(labour.name).toBe("Installation configuration programming (36 hours delivered; 21 billed after complimentary hours)");
+    expect(labour).toMatchObject({ quantity: 36, unitCents: 18000 });
+    expect(line(labour)).toBe(648000);
+    expect(smart.discount).toEqual({ label: "Complimentary installation — 15 hours free", quantity: 15, unitCents: -18000 });
+    expect(line(smart.discount!)).toBe(-270000);
+    expect(subtotal(smart)).toBe(1235000);
+    expect(smart.grossSubtotal).toEqual({ label: "Smart home subtotal before complimentary labour", amountCents: 1505000 });
+    expect(subtotal(quote.sections[1])).toBe(127600);
+    expect(quote.sections.reduce((sum, section) => sum + subtotal(section), 0)).toBe(1362600);
+  });
   it("uses the approved v2 item rates, quantities, subtotals, and total", () => {
     expect(quote.status).toBe("issued");
     expect(quote.sections[0].items).toHaveLength(8);
     expect(quote.sections[0].items.slice(0, 7).reduce((a, x) => a + line(x), 0)).toBe(857000);
     expect(quote.sections[0].items.find(x => x.name.startsWith('4"'))).toMatchObject({quantity:1,unitCents:29900});
-    expect(quote.sections[0].items[7]).toMatchObject({quantity:21,unitCents:18000});
-    expect(quote.sections[0].discount).toBeNull();
+    expect(quote.sections[0].items[7]).toMatchObject({quantity:36,unitCents:18000});
+    expect(line(quote.sections[0].items[7])).toBe(648000);
+    expect(quote.sections[0].discount).toMatchObject({quantity:15,unitCents:-18000});
+    expect(quote.sections[0].grossSubtotal?.amountCents).toBe(1505000);
     expect(subtotal(quote.sections[0])).toBe(1235000);
     expect(subtotal(quote.sections[1])).toBe(127600);
     expect(quote.sections.reduce((a, s) => a + subtotal(s), 0)).toBe(1362600);
@@ -30,7 +45,7 @@ describe("Hazal quote", () => {
   });
   it("includes 21 billed hours within 36 delivered, with no R&D", () => {
     expect(quote.sections[0].items[7]).toMatchObject({
-      quantity: 21,
+      quantity: 36,
       unitCents: 18000,
     });
     expect(quote.terms.join(" ")).toContain("36 hours");

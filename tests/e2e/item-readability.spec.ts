@@ -110,13 +110,13 @@ test("all item quantities and prices are visible without sideways panning", asyn
       );
     expect(overflow, `item content must fit at ${width}px`).toEqual([]);
   }
-  await expect(page.locator(".mobile-item--discount")).toHaveCount(0);
-  await expect(page.locator(".saving")).toHaveCount(0);
+  await expect(page.locator(".mobile-item--discount")).toHaveCount(1);
+  await expect(page.locator(".saving")).toHaveText("You save: $2,700.00");
   await page.setViewportSize({ width: 1440, height: 900 });
-  await expect(page.locator("tr.discount")).toHaveCount(0);
-  await expect(page.locator(".saving")).toHaveCount(0);
+  await expect(page.locator("tr.discount")).toHaveCount(1);
+  await expect(page.locator(".saving")).toHaveText("You save: $2,700.00");
   await page.emulateMedia({ media: "print" });
   await expect(page.getByTestId("mobile-quote-items")).toBeHidden();
   await expect(page.getByRole("table")).toHaveCount(1);
-  await expect(page.locator("tr.discount")).toHaveCount(0);
+  await expect(page.locator("tr.discount")).toHaveCount(1);
 });

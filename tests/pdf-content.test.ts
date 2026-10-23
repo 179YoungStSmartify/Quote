@@ -35,7 +35,7 @@ it("PDF uses the React print page and preserves approved facts without signing",
     for (const fact of [
       "23/10/2026", "22/11/2026", "30 days from issue",
       "PL-HZL-179YS-0002-v2", "Hazal", "$13,626.00", "$12,350.00",
-      "$1,276.00", "$8,570.00", "$3,780.00", "21 hours",
+      "$1,276.00", "$8,570.00", "$6,480.00", "-$2,700.00", "21 hours",
       "36 hours", "15 complimentary", '15.6"', '10"', '4"',
       "6 automations", "NeoPlan3D", "$360.00",
       "existing client AirTouch tablet", "Home Assistant app", "no additional fee",
@@ -45,7 +45,11 @@ it("PDF uses the React print page and preserves approved facts without signing",
       "All amounts are in AUD.",
     ])
       expect(text).toContain(fact);
-    expect(text).not.toMatch(/Before discount|Savings|\$0\.00|R&D|DRAFT|NOT ISSUED|GST|[\u4e00-\u9fff]/i);
+    expect(text).toContain("Before discount $16,326.00 $13,626.00");
+    expect(text).toContain("$15,050.00");
+    expect(text).toContain("36 $180.00 $6,480.00");
+    expect(text).toContain("15 -$180.00 -$2,700.00");
+    expect(text).not.toMatch(/\$0\.00|R&D|DRAFT|NOT ISSUED|GST|[\u4e00-\u9fff]/i);
     expect(text).not.toContain("$598.00");
     expect(text).not.toContain("$240.00");
     expect(text).not.toMatch(/paid conversion|re-locking|power loss/i);
