@@ -8,8 +8,8 @@ test("production prefix, quote navigation, responsive widths, print and real PDF
   await expect(
     page.getByRole("heading", { name: /thoughtful foundation/i }),
   ).toBeVisible();
-  await expect(page.getByText("PL-HZL-179YS-0001-v2")).toBeVisible();
-  await expect(page.getByText("$15,453.20").first()).toBeVisible();
+  await expect(page.getByText("PL-HZL-179YS-0002-v2")).toBeVisible();
+  await expect(page.getByText("$13,626.00").first()).toBeVisible();
   for (const width of [1440, 768, 390, 320]) {
     await page.setViewportSize({ width, height: 850 });
     expect(
@@ -26,7 +26,7 @@ test("production prefix, quote navigation, responsive widths, print and real PDF
     page.waitForEvent("download"),
     page.getByRole("link", { name: "Download quote PDF" }).first().click(),
   ]);
-  expect(pdf.suggestedFilename()).toBe("PL-HZL-179YS-0001-v2.pdf");
+  expect(pdf.suggestedFilename()).toBe("PL-HZL-179YS-0002-v2.pdf");
   expect((await readFile(await pdf.path())).subarray(0, 4).toString()).toBe(
     "%PDF",
   );

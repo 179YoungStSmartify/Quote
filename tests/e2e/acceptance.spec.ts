@@ -16,10 +16,9 @@ test("release acceptance: real navigation, mobile focus, summary, and error-free
   await page.goto("/Quote/");
   await page.evaluate(() => document.fonts.ready);
   const summary = page.getByRole("region", { name: "Quote summary" });
-  await expect(summary).toContainText("$15,453.20");
-  await expect(summary).toContainText("$14,177.20");
+  await expect(summary).toContainText("$13,626.00");
+  await expect(summary).toContainText("$12,350.00");
   await expect(summary).toContainText("$1,276.00");
-  await expect(summary).toContainText("$3,600.00");
   await expect(summary).toContainText("Smart home");
   await expect(summary).toContainText("Network");
   for (const width of [1440, 768, 390, 320]) {
@@ -90,10 +89,10 @@ test("release acceptance: real navigation, mobile focus, summary, and error-free
   await page.emulateMedia({ media: "print" });
   await expect(page.locator("#scope")).toHaveCSS("break-inside", "auto");
   await expect(
-    page.getByText("For 60 days after handover", { exact: false }),
+    page.getByText("60 days", { exact: false }).first(),
   ).toBeVisible();
   await expect(
-    page.getByText("2 years, hardware only", { exact: false }),
+    page.getByText("Two years for hardware supplied by us", { exact: false }).first(),
   ).toBeVisible();
   await page.emulateMedia({ media: "screen" });
   await menu.click();

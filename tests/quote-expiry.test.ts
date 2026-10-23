@@ -41,8 +41,10 @@ describe("quote expiry gate", () => {
     expect(isQuoteExpired("not a date", 0)).toBe(false);
   });
 
-  it("uses the DD/MM/YYYY format for the published quote", () => {
-    expect(quote.validUntil).toMatch(/^\d{2}\/\d{2}\/\d{4}$/);
+  it("leaves validity unset for the unissued draft", () => {
+    expect(quote.status).toBe("draft");
+    expect(quote.quoteDate).toBeNull();
+    expect(quote.validUntil).toBeNull();
   });
 });
 

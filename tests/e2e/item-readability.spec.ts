@@ -110,37 +110,13 @@ test("all item quantities and prices are visible without sideways panning", asyn
       );
     expect(overflow, `item content must fit at ${width}px`).toEqual([]);
   }
-  const discountCard = page
-    .getByTestId("mobile-quote-items")
-    .locator(".mobile-item--discount");
-  await expect(discountCard).toHaveCount(
-    quote.sections.filter((section) => section.discount).length,
-  );
-  await expect(discountCard.locator("h4")).toContainText(/discount/i);
-  const mobileColors = await discountCard.first().evaluate((element) => ({
-    discount: getComputedStyle(element).backgroundColor,
-    ordinary: getComputedStyle(
-      element.parentElement!.querySelector(
-        ".mobile-item:not(.mobile-item--discount)",
-      )!,
-    ).backgroundColor,
-  }));
-  expect(mobileColors.discount).not.toBe(mobileColors.ordinary);
+  await expect(page.locator(".mobile-item--discount")).toHaveCount(0);
+  await expect(page.locator(".saving")).toHaveCount(0);
   await page.setViewportSize({ width: 1440, height: 900 });
-  const tableColors = await page
-    .locator("tr.discount")
-    .first()
-    .evaluate((element) => ({
-      discount: getComputedStyle(element).backgroundColor,
-      ordinary: getComputedStyle(
-        element.parentElement!.querySelector("tr:not(.group):not(.discount)")!,
-      ).backgroundColor,
-    }));
-  expect(tableColors.discount).not.toBe(tableColors.ordinary);
-  await expect(page.locator(".saving")).toHaveCSS("background-color", /rgb\(/);
+  await expect(page.locator("tr.discount")).toHaveCount(0);
+  await expect(page.locator(".saving")).toHaveCount(0);
   await page.emulateMedia({ media: "print" });
   await expect(page.getByTestId("mobile-quote-items")).toBeHidden();
   await expect(page.getByRole("table")).toHaveCount(1);
-  await expect(page.locator("tr.discount")).toBeVisible();
-  await expect(page.locator("tr.discount")).toContainText(/discount/i);
+  await expect(page.locator("tr.discount")).toHaveCount(0);
 });

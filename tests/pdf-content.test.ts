@@ -23,43 +23,34 @@ it("PDF uses the React print page and preserves approved facts without signing",
       .replace(/\s+/g, " ");
     expect(parsed.pages.length).toBeGreaterThan(0);
     for (const page of parsed.pages) {
+      if (page.text.includes("Optional add-ons"))
+        expect(page.text).toContain("Repurpose existing wall tablet");
+      if (page.text.includes("Phase 2 · not included"))
+        expect(page.text).toContain("Additional automations");
       if (page.text.includes("Included experience"))
         expect(page.text).toContain("Dashboards");
       if (page.text.includes("Notes and terms"))
-        expect(page.text).toContain("This quote includes");
+        expect(page.text).toMatch(/Notes and terms\s+(?:All prices|Section A)/);
     }
     for (const fact of [
-      "Quote summary",
-      "Before discount",
-      "PL-HZL-179YS-0001-v2",
-      "Hazal",
-      "$15,453.20",
-      "$14,177.20",
-      "$1,276.00",
-      "$4,977.20",
-      "$17,777.20",
-      "80 hours",
-      "$10,800.00",
-      "$2,000.00",
-      "-$3,600.00",
-      "Chinese spoken-language understanding",
-      "NeoPlan3D",
-      "10 automations, including:",
-      '"I\'m home" scene.',
-      '"I\'m leaving" scene.',
-      "1 scene-control dashboard.",
-      "1 mobile dashboard per account/person.",
-      "hardware only",
+      "DRAFT", "NOT ISSUED", "21/10/2026", "30 days from issue",
+      "PL-HZL-179YS-0002-v2", "Hazal", "$13,626.00", "$12,350.00",
+      "$1,276.00", "$8,570.00", "$3,780.00", "21 hours",
+      "36 hours", "15 complimentary", '15.6"', '10"', '4"',
+      "6 automations", "NeoPlan3D", "$240.00", "$360.00",
+      "$299.00", "Phase 2", "GST", "90-day", "supplier",
       "A thoughtful foundation for connected living.",
-      "Clear scope for a considered smart home and a separately priced network.",
+      "Essential smart home and network — prepared for review, not yet issued.",
       "All amounts are in AUD.",
     ])
       expect(text).toContain(fact);
+    expect(text).not.toMatch(/Before discount|Savings|\$0\.00|R&D|[\u4e00-\u9fff]/i);
+    expect(text).not.toContain("$598.00");
     expect(text).not.toMatch(
       /Acceptance|Accepted by:|Signing integration|signature/i,
     );
     expect(text).not.toMatch(
-      /QC Realty|Hazel|\bGST\b|Section [AB]\b|internal costing|gross profit|markup/i,
+      /QC Realty|Hazel|Section [AB]\b|internal costing|gross profit|markup/i,
     );
   } finally {
     await parser.destroy();
