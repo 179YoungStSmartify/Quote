@@ -47,7 +47,7 @@ test("summary total hierarchy, definition alignment, gaps, and print colors hold
     "background-color",
     "rgb(255, 255, 255)",
   );
-  await expect(page.locator(".hero p")).toHaveCSS("color", "rgb(36, 33, 28)");
+  await expect(page.locator(".hero > p:not(.draft-banner)")).toHaveCSS("color", "rgb(36, 33, 28)");
   await expect(page.locator(".quote-summary-total")).toHaveCSS(
     "background-color",
     "rgb(255, 255, 255)",

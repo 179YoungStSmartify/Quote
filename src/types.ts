@@ -23,13 +23,27 @@ export type QuotePresentation = {
   heroSubheading: string;
   currencyNote: string;
 };
+export type QuoteAddon = {
+  id: string;
+  title: string;
+  amountCents: number;
+  details: string[];
+};
 export type QuoteData = {
+  status?: "draft" | "issued";
+  draftedOn?: string;
+  quoteDate: string | null;
+  validUntil: string | null;
+  optionalAddons?: QuoteAddon[];
+  phaseTwo?: {
+    introduction: string;
+    items: { name: string; amountCents: number }[];
+  };
+  draftChecks?: string[];
   currency: string;
   quoteId: string;
   preparedFor: string;
   site: string;
-  quoteDate: string;
-  validUntil: string;
   preparedBy: string;
   presentation: QuotePresentation;
   scopeIntroduction: string;

@@ -25,12 +25,14 @@ const total = q.sections.reduce((sum, s) => sum + sectionTotal(s), 0),
     0,
   );
 export default function App() {
-  const status = quoteExpiryStatus(q.validUntil);
+  const isDraft = q.status === "draft";
+  const status = isDraft ? "valid" : quoteExpiryStatus(q.validUntil ?? "");
   return (
     <Shell>
       <div className="hero" id="overview">
         <span className="eyebrow">
-          Project quote · prepared for {q.preparedFor}
+          {isDraft ? "DRAFT · NOT ISSUED" : "Project quote"} · prepared for{" "}
+          {q.preparedFor}
         </span>
         <h1>{q.presentation.heroHeadline}</h1>
         <p>{q.presentation.heroSubheading}</p>
@@ -50,21 +52,33 @@ export default function App() {
           <span>
             QUOTE <strong>{q.quoteId}</strong>
           </span>
-          <span>PREPARED {q.quoteDate}</span>
-          <span>VALID UNTIL {q.validUntil}</span>
+          <span>
+            {isDraft ? `DRAFTED ${q.draftedOn}` : `ISSUED ${q.quoteDate}`}
+          </span>
+          <span>
+            {isDraft
+              ? "VALIDITY: 30 DAYS FROM ISSUE"
+              : `VALID UNTIL ${q.validUntil}`}
+          </span>
         </div>
-        {status === "expiring" && (
+        {isDraft && (
+          <p className="draft-banner" role="status">
+            DRAFT · NOT ISSUED — Issue date and 30-day validity will be set on
+            issue.
+          </p>
+        )}
+        {!isDraft && status === "expiring" && (
           <p className="expiry-banner expiry-banner--expiring" role="status">
             This quote expires soon — still valid until {q.validUntil}.
           </p>
         )}
-        {status === "invalid" && (
+        {!isDraft && status === "invalid" && (
           <p className="expiry-banner expiry-banner--expired" role="alert">
             Quote validity date is invalid. Contact {q.preparedBy} to confirm
             current pricing.
           </p>
         )}
-        {status === "expired" && (
+        {!isDraft && status === "expired" && (
           <p className="expiry-banner expiry-banner--expired" role="alert">
             This quote expired on {q.validUntil}. Contact {q.preparedBy} for
             refreshed pricing.
@@ -108,10 +122,12 @@ export default function App() {
                   </dd>
                 </div>
               ))}
-              <div className="discount-summary">
-                <dt>{q.discountSummary}</dt>
-                <dd>{cents(discount)}</dd>
-              </div>
+              {discount > 0 && (
+                <div className="discount-summary">
+                  <dt>{q.discountSummary}</dt>
+                  <dd>{cents(discount)}</dd>
+                </div>
+              )}
             </dl>
           </Card>
         </div>
@@ -125,7 +141,11 @@ export default function App() {
         <Card>
           <span className="eyebrow">Prepared by</span>
           <h3>{q.preparedBy}</h3>
-          <p>Valid until {q.validUntil}</p>
+          <p>
+            {isDraft
+              ? "Issue date to be set · valid for 30 days from issue"
+              : `Valid until ${q.validUntil}`}
+          </p>
         </Card>
       </div>
       <Section id="scope" title="Scope and investment">
@@ -317,15 +337,64 @@ export default function App() {
           </p>
         </div>
         <p className="currency-note">{q.presentation.currencyNote}</p>
-        <p className="saving">
-          {q.discountSummary}: {cents(discount)}
-        </p>
+        {discount > 0 && (
+          <p className="saving">
+            {q.discountSummary}: {cents(discount)}
+          </p>
+        )}
       </Section>
+      {q.optionalAddons?.length ? (
+        <Section
+          id="optional-addons"
+          title="Optional add-ons · not included in total"
+        >
+          <p>These options are not included in the base quote total.</p>
+          <div className="grid">
+            {q.optionalAddons.map((addon) => (
+              <Card key={addon.id}>
+                <h3>{addon.title}</h3>
+                <p>{cents(addon.amountCents)}</p>
+                <ul className="list">
+                  {addon.details.map((detail, i) => (
+                    <li key={i}>{detail}</li>
+                  ))}
+                </ul>
+              </Card>
+            ))}
+          </div>
+        </Section>
+      ) : null}
+      {q.phaseTwo ? (
+        <Section id="phase-two" title="Phase 2 · not included">
+          <p>{q.phaseTwo.introduction}</p>
+          <ul className="list">
+            {q.phaseTwo.items.map((item) => (
+              <li key={item.name}>
+                {item.name} — {cents(item.amountCents)}
+              </li>
+            ))}
+          </ul>
+        </Section>
+      ) : null}
+      {isDraft && q.draftChecks?.length ? (
+        <Section id="draft-checks" title="Before issue · draft checks">
+          <ul className="list">
+            {q.draftChecks.map((item, i) => (
+              <li key={i}>{item}</li>
+            ))}
+          </ul>
+        </Section>
+      ) : null}
       <Section id="inclusions" title="Included experience">
         <div className="grid">
           {Object.entries(q.inclusions).map(([heading, items]) => (
             <Card key={heading}>
-              <h3>{heading[0].toUpperCase() + heading.slice(1)}</h3>
+              <h3>
+                {(heading[0].toUpperCase() + heading.slice(1)).replace(
+                  /([a-z])([A-Z])/g,
+                  "$1 $2",
+                )}
+              </h3>
               <ul className="list inclusion-list">
                 {items.map((item) =>
                   typeof item === "string" ? (

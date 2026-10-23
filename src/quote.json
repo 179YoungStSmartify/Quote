@@ -1,82 +1,70 @@
 {
   "currency": "AUD",
-  "quoteId": "PL-HZL-179YS-0001-v2",
+  "quoteId": "PL-HZL-179YS-0002-v2",
   "preparedFor": "Hazal",
   "site": "179 Young St, Sunnybank QLD 4109",
-  "quoteDate": "16/10/2026",
-  "validUntil": "15/11/2026",
+  "quoteDate": null,
+  "validUntil": null,
   "preparedBy": "Perspective Living",
   "presentation": {
     "heroHeadline": "A thoughtful foundation for connected living.",
-    "heroSubheading": "Clear scope for a considered smart home and a separately priced network.",
+    "heroSubheading": "Essential smart home and network — prepared for review, not yet issued.",
     "currencyNote": "All amounts are in AUD."
   },
-  "scopeIntroduction": "Five displays: one large, two medium and two small. Smart home and network are itemised separately.",
+  "scopeIntroduction": "Three displays: one 15.6-inch, one 10-inch and one 4-inch. Essential smart-home scope and separately priced network. Installation includes 36 hours delivered: 15 complimentary and 21 billed.",
   "sections": [
     {
       "id": "smart-home",
-      "title": "Smart home",
+      "title": "Smart home (Essential)",
       "items": [
         {
-          "name": "SmartHome Server package (smart home controller with Zigbee/Thread radio)",
+          "name": "SmartHome Server package (controller with Zigbee/Thread radio)",
           "quantity": 1,
-          "unitCents": 40480
+          "unitCents": 59900
         },
         {
           "name": "Smart light switch (physical button, smart function)",
           "quantity": 30,
-          "unitCents": 5719
+          "unitCents": 18000
         },
         {
           "name": "15.6\" wall-mounted display",
           "quantity": 1,
-          "unitCents": 71390
+          "unitCents": 84900
         },
         {
           "name": "10\" wall-mounted display",
-          "quantity": 2,
-          "unitCents": 54890
+          "quantity": 1,
+          "unitCents": 74900
         },
         {
           "name": "4\" in-wall display (light switch retrofit)",
-          "quantity": 2,
-          "unitCents": 21890
+          "quantity": 1,
+          "unitCents": 29900
         },
         {
           "name": "Presence sensor",
-          "quantity": 4,
-          "unitCents": 10890
+          "quantity": 2,
+          "unitCents": 19900
         },
         {
-          "name": "Door sensor",
+          "name": "Door / window sensor",
           "quantity": 4,
-          "unitCents": 4290
+          "unitCents": 6900
         },
         {
-          "name": "Installation, configuration and programming (hours)",
-          "quantity": 60,
+          "name": "Installation, configuration and programming (hours; 36 delivered, 15 complimentary)",
+          "quantity": 21,
           "unitCents": 18000
-        },
-        {
-          "name": "R&D development — custom integrations and dashboards (hours)",
-          "quantity": 20,
-          "unitCents": 10000
         }
       ],
       "interimSubtotal": {
         "afterItemCount": 7,
         "label": "Hardware subtotal",
-        "amountCents": 497720
+        "amountCents": 857000
       },
-      "discount": {
-        "label": "Special discount — 20 hours installation free",
-        "quantity": 20,
-        "unitCents": -18000
-      },
-      "grossSubtotal": {
-        "label": "Smart home subtotal",
-        "amountCents": 1777720
-      },
+      "discount": null,
+      "grossSubtotal": null,
       "finalLabel": "Smart home total"
     },
     {
@@ -108,18 +96,11 @@
   "inclusions": {
     "dashboards": [
       {
-        "label": "15.6\" and 10\" displays",
+        "label": "Wall displays",
         "items": [
-          "1 main dashboard for an at-a-glance view of the home.",
-          "1 area-based dashboard.",
-          "NeoPlan3D interactive 3D floor plan on the 15.6\" display."
-        ]
-      },
-      {
-        "label": "4\" displays",
-        "items": [
-          "1 Home Assistant dashboard for the display's area.",
-          "1 scene-control dashboard."
+          "1 main dashboard on the 15.6\" display.",
+          "1 area dashboard on the 10\" display.",
+          "1 area dashboard and 1 scene-control dashboard on the 4\" display."
         ]
       },
       {
@@ -127,35 +108,103 @@
         "items": ["1 mobile dashboard per account/person."]
       }
     ],
+    "voiceControl": [
+      "Hosted Google Assistant voice control. Chinese and English room/device naming was reported working in testing; each wall tablet and phone must be configured and verified individually at handover. Voice depends on each member’s Google account and device Google services; internet is required and offline voice is not guaranteed."
+    ],
     "integrations": [
-      "Air conditioning",
-      "Voice assistant with Chinese spoken-language understanding",
-      "Garage gate",
-      "Xiaomi smart home devices (best effort)",
-      "Smart blinds (best effort)",
-      "Client network and separate IoT network setup"
+      "Air conditioning via AirTouch integration.",
+      "Garage gate.",
+      "Xiaomi smart home devices (best effort).",
+      "Smart blinds (best effort).",
+      "Client network and separate IoT network setup."
     ],
     "automations": [
       {
-        "label": "10 automations, including:",
+        "label": "6 automations, agreed at project kickoff",
         "items": [
-          "Away scene: lights turn on and off at random while no one is home.",
-          "\"I'm home\" scene.",
-          "\"I'm leaving\" scene.",
+          "Away scene: lights turn on and off at random when no one is home.",
+          "I’m home.",
+          "I’m leaving.",
           "Movie scene.",
-          "Night-time sentry mode."
+          "Night-time sentry mode.",
+          "One automation of your choice."
         ]
       }
     ]
   },
   "terms": [
-    "This quote includes up to 80 hours of work (60 hours installation and setup, 20 of them free, plus 20 hours R&D development). Any work beyond 80 hours is charged separately at $180.00 per hour.",
-    "Integrations marked 'best effort' depend on the device and manufacturer supporting Home Assistant. If a device can't be integrated reliably, it is not charged as extra hours.",
-    "Home Assistant remote access and cloud backup run on a Nabu Casa subscription, paid by the client directly.",
-    "The network is priced separately and can be accepted on its own.",
-    "Prices are valid for 30 days. Hardware prices may change if the supplier's prices change before order."
+    "All prices are in AUD.",
+    "The Essential smart-home package includes 36 hours of installation and setup: 15 hours complimentary and 21 hours billed. Work beyond 36 hours is charged separately at $180.00 per hour.",
+    "Switch and in-wall display fitting requires a licensed electrician. Electrical work and new data cabling to display positions are not included and are quoted separately after a site visit.",
+    "Optional tablet and sauna add-ons are fixed prices outside the 36 hours. If extra time is needed, approval is obtained before any extra charge.",
+    "Best-effort integrations depend on device and manufacturer support for Home Assistant. Unreliable integration is not charged as extra hours.",
+    "Home Assistant remote access and cloud backup use a Nabu Casa subscription paid directly by the client.",
+    "Voice control uses the client’s own Google accounts and requires internet; local/offline voice is not guaranteed.",
+    "Network is priced separately and may be accepted on its own.",
+    "Prices are valid for 30 days from issue. Hardware prices may change if supplier prices change before order.",
+    "Hyper-care is provided for 60 days and covers support and bug fixes within agreed scope for the system as delivered; it excludes new features.",
+    "Hardware warranty is two years for hardware supplied by us. Client-supplied tablet is excluded from hardware warranty; our configuration work is covered by 60-day hyper-care. Correcting a defect in our own work is never chargeable; out-of-scope work requires a separate quote. Nothing limits rights under Australian Consumer Law."
   ],
-  "hyperCare": "For 60 days after handover, we provide support and bug fixes to keep the system working as delivered, within the quoted scope. New features, extra devices or changes to scope are quoted separately.",
-  "warranty": "2 years, hardware only. Supplied hardware is covered for 2 years. Re-installation, replacement labour and re-programming are quoted separately.",
-  "discountSummary": "You save"
+  "hyperCare": "60 days of support and bug fixes within agreed scope for the system as delivered; new features are excluded.",
+  "warranty": "Two years for hardware supplied by us. Client-supplied tablet is excluded from hardware warranty; configuration work remains covered by 60-day hyper-care.",
+  "discountSummary": "You save",
+  "status": "draft",
+  "draftedOn": "21/10/2026",
+  "optionalAddons": [
+    {
+      "id": "tablet",
+      "title": "Repurpose existing wall tablet",
+      "amountCents": 24000,
+      "details": [
+        "AirTouch installed an Android wall tablet; subject to on-site checks of Android version, Google services and recovery after power loss.",
+        "The tablet must restart without re-locking to the vendor interface. If the site checks fail or reliable conversion is not viable, this optional fee does not apply.",
+        "Convert client-supplied tablet to an additional wall dashboard; about 1.5 hours.",
+        "Air-conditioning control moves into Home Assistant via AirTouch integration.",
+        "Tablet hardware is excluded from supplied-hardware warranty; configuration is covered by 60-day hyper-care. Defects in our work are not chargeable; out-of-scope work requires separate quote."
+      ]
+    },
+    {
+      "id": "sauna",
+      "title": "Zeneva far-infrared sauna integration",
+      "amountCents": 36000,
+      "details": [
+        "Recommended 2-person Zeneva sauna is a supplier-confirmed Tuya Wi-Fi appliance.",
+        "Switch on and set temperature from wall displays and phones; one scene included.",
+        "The included sauna automation is additional to the six base automations.",
+        "Convenience auto-off when house is empty depends on Wi-Fi and presence detection and is not a safety device.",
+        "Temperature limits and overheat cutoff remain in the sauna; automations only switch on/off. Scheduled unattended preheating only after exact-model remote-start safeguards are checked against manufacturer instructions.",
+        "Subject to 2.4 GHz Wi-Fi coverage. Fixed fee is best effort; if exact model cannot be integrated reliably, client is told before charge and fee does not apply."
+      ]
+    }
+  ],
+  "phaseTwo": {
+    "introduction": "Proposed Phase 2 menu, not included in the base total. Confirm the proposed 90-day price hold from issue and supplier-price-change terms before this draft is issued. Prices include hardware and software setup; the additional 4-inch display includes its area and scene dashboards. Installation beyond the hours already delivered, and new electrical or cabling work, are quoted separately.",
+    "items": [
+      {
+        "name": "Additional 4-inch in-wall display (light switch retrofit) × 1",
+        "amountCents": 29900
+      },
+      {
+        "name": "Additional 10-inch wall display",
+        "amountCents": 74900
+      },
+      {
+        "name": "Additional presence sensors × 2",
+        "amountCents": 39800
+      },
+      {
+        "name": "NeoPlan3D interactive 3D floor plan on 15.6-inch display",
+        "amountCents": 36000
+      },
+      {
+        "name": "Additional automations × 4 (to the full 10)",
+        "amountCents": 72000
+      }
+    ]
+  },
+  "draftChecks": [
+    "Before issue, explicitly confirm whether prices include GST; no tax treatment is represented here.",
+    "Confirm the 90-day Phase 2 price-hold terms before issue.",
+    "Confirm supplier-price-change carve-out before issue."
+  ]
 }

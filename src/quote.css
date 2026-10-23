@@ -24,6 +24,17 @@
 }
 .quote-summary-grid {
   align-items: stretch;
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 901px) {
+  .quote-summary-grid {
+    grid-template-columns: minmax(max-content, 1fr) minmax(0, 1fr);
+  }
+}
+@media screen and (max-width: 360px) {
+  .shell {
+    padding-inline: 4px;
+  }
 }
 .quote-summary-total {
   background: var(--dark);
@@ -379,5 +390,27 @@
   }
   .quote-summary-total .quote-summary-amount {
     font-size: 28pt;
+  }
+}
+
+.draft-banner {
+  margin: 16px 0 0;
+  padding: 12px 16px;
+  border: 2px solid #8a5a00;
+  border-radius: 8px;
+  color: #493000;
+  background: #fff2d4;
+  font-weight: 700;
+}
+@media print {
+  #optional-addons {
+    break-before: page;
+  }
+  #phase-two {
+    break-inside: avoid;
+  }
+  .draft-banner {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 }

@@ -31,18 +31,20 @@ Install Chromium before tests or builds (`npm ci` then `npx playwright install c
 ## Source and content
 
 - `src/quote.json`: structured content used by the React page and PDF generator.
-- Quote validity: `validUntil` drives an expiry banner on the page, an expiry
-  note in the PDF, and a `check:expiry` CI gate. Refresh `quoteDate` and
-  `validUntil` whenever quote content is approved afresh.
+- Draft quotes use `status: "draft"`, a real `draftedOn` date, and `null`
+  `quoteDate` / `validUntil`; they remain explicitly unissued in screen and
+  PDF output and are not treated as active or expired. Only set issue/expiry
+  dates after approval and issuance. `npm run check:expiry` validates the
+  issued expiry boundary; a coherent draft passes without asserting validity.
 - `src/types.ts`: `QuoteData` type contract.
 - `src/App.tsx`: interactive page rendering and total calculations.
 - `src/quote.css`: quote-specific styles; shared tokens and print rules are in `vendor/react-ui/src/styles.css`.
 - `scripts/generate-pdf.mjs`: separate PDF rendering implementation.
 - `vendor/react-ui/`: vendored shared UI and its `SNAPSHOT-PROVENANCE.md`.
 
-Screen totals and PDF totals derive from line items and discounts. Authored optional subtotal amounts also appear in both renderers and must be reconciled with the line items. After editing approved content, check the browser page, generated PDF, and print preview.
+Screen totals and PDF totals derive from base line items. Optional add-ons and Phase 2 are displayed separately and are excluded from the base total. Legacy discount rendering remains supported, but a draft with no monetary discount must not show struck-through originals or a savings row. After editing approved content, check browser page, generated PDF, and print preview.
 
-The quote summary uses a charcoal total card and a quieter aligned breakdown, with a 24px narrow / 32px wide gap before the overview cards. Print switches the total card to white with dark text and a compact two-column summary. Category titles and subtotal labels come from the JSON and are shared with the PDF; use descriptive names rather than section letters. Summary cards derive pre-discount amounts from line items and strike them through only where an actual reduction exists. Discounted amounts remain primary, with explicit before/after text for assistive technology and the existing savings row retained. The downloadable PDF uses the same print layout, including the summary and totals.
+The quote summary uses a charcoal total card and a quieter aligned breakdown, with a 24px narrow / 32px wide gap before the overview cards. Print switches the total card to white with dark text and a compact two-column summary. Category titles and subtotal labels come from the JSON and are shared with the PDF; use descriptive names rather than section letters. Summary cards show pre-discount amounts and savings only when an actual monetary reduction exists; never emit a zero-savings row. The downloadable PDF uses the same print layout, including the summary and totals.
 
 ## Pages base path
 
@@ -93,4 +95,4 @@ Proxy each hostname to its localhost port, serving `/` (not `/Quote/`). For a co
 
 ## Mobile item layout
 
-The quote uses stacked item cards through 1024px and the original semantic table on desktop and paper. Both views derive from `src/quote.json` and show the same interim/gross subtotals, discounts, section totals, and grand total. Item names wrap while currency amounts stay intact. Validate 320, 360, 375, 390, 430, 768, 1024, and 1440px in portrait and landscape, with enlarged text, minimum 44px touch targets, and no sideways panning for essential quote details.
+The quote uses stacked item cards through 1024px and the original semantic table on desktop and paper. Both views derive from `src/quote.json` and show matching line items and section/grand totals; interim subtotals and discounts appear only when authored and applicable. Item names wrap while currency amounts stay intact. Validate 320, 360, 375, 390, 430, 768, 1024, and 1440px in portrait and landscape, with enlarged text, minimum 44px touch targets, and no sideways panning for essential quote details.
