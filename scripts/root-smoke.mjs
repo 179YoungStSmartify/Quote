@@ -163,8 +163,8 @@ try {
       }
     }
   }
-  if (!(await page.locator(".draft-banner").isVisible()))
-    throw new Error("DRAFT / NOT ISSUED marker is missing");
+  if ((await page.locator(".draft-banner").count()) !== 0)
+    throw new Error("unexpected DRAFT / NOT ISSUED marker");
   if (
     !(await page
       .getByRole("heading", { name: /thoughtful foundation/i })
@@ -178,7 +178,7 @@ try {
       .first()
       .isVisible())
   )
-    throw new Error(`canonical draft total ${total} is missing`);
+    throw new Error(`canonical issued total ${total} is missing`);
   const pdfResponse = await page.request.get(new URL("quote.pdf", base).href);
   if (
     !pdfResponse.ok() ||
@@ -195,7 +195,7 @@ try {
     throw new Error(`unexpected PDF filename: ${download.suggestedFilename()}`);
   if (problems.length) throw new Error(problems.join("\n"));
   console.log(
-    "root browser smoke passed: index, loaded assets, draft total, PDF response/header/download, no JS or network errors",
+    "root browser smoke passed: index, loaded assets, issued total, PDF response/header/download, no JS or network errors",
   );
 } finally {
   await browser?.close();

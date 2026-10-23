@@ -1,17 +1,14 @@
 import { expect, test } from "@playwright/test";
 
-test("draft screen and print identify unissued quote and separate options", async ({
+test("issued screen and print show issue dates and separate options", async ({
   page,
 }) => {
   await page.goto(".");
-  await expect(page.locator(".hero")).toContainText("DRAFT · NOT ISSUED");
-  await expect(page.locator(".hero")).toContainText("DRAFTED 21/10/2026");
-  await expect(page.locator(".hero")).toContainText(
-    "VALIDITY: 30 DAYS FROM ISSUE",
-  );
+  await expect(page.locator(".hero")).toContainText("ISSUED 23/10/2026");
+  await expect(page.locator(".hero")).toContainText("VALID UNTIL 22/11/2026");
   await expect(page.getByRole("alert")).toHaveCount(0);
-  await expect(page.locator(".hero")).not.toContainText("Valid until");
-  await expect(page.locator(".hero")).not.toContainText("15/11/2026");
+  await expect(page.locator("#overview-details")).toContainText("Valid until 22/11/2026");
+  await expect(page.locator(".hero")).not.toContainText("GST");
   await expect(
     page.getByRole("heading", { name: /Optional add-ons/ }),
   ).toBeVisible();
@@ -23,7 +20,7 @@ test("draft screen and print identify unissued quote and separate options", asyn
     "$13,626.00",
   );
   await page.emulateMedia({ media: "print" });
-  await expect(page.locator(".draft-banner")).toBeVisible();
+  await expect(page.locator(".draft-banner")).toHaveCount(0);
   await expect(page.locator("#optional-addons")).toContainText(
     "not included in the base quote total",
   );

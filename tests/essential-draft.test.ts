@@ -6,20 +6,19 @@ const quote = JSON.parse(
   readFileSync(new URL("../src/quote.json", import.meta.url), "utf8"),
 ) as QuoteData;
 
-describe("Essential English draft data", () => {
-  it("is explicitly an unissued draft with unset issue dates", () => {
+describe("Essential English issued quote data", () => {
+  it("is issued with approved dates and no draft or tax-confirmation language", () => {
     expect(quote.quoteId).toBe("PL-HZL-179YS-0002-v2");
-    expect(quote.status).toBe("draft");
-    expect(quote.draftedOn).toBe("21/10/2026");
-    expect(quote.quoteDate).toBeNull();
-    expect(quote.validUntil).toBeNull();
-    expect(quote.draftChecks).toEqual(
-      expect.arrayContaining([
-        expect.stringContaining("GST"),
-        expect.stringContaining("90-day"),
-        expect.stringContaining("supplier"),
-      ]),
-    );
+    expect(quote.status).toBe("issued");
+    expect(quote).not.toHaveProperty("draftedOn");
+    expect(quote).not.toHaveProperty("draftChecks");
+    expect(quote.quoteDate).toBe("23/10/2026");
+    expect(quote.validUntil).toBe("22/11/2026");
+    expect(JSON.stringify(quote)).not.toMatch(/GST|tax inclusive|tax exclusive/i);
+    expect(quote.presentation.heroSubheading).not.toMatch(/draft|review|not yet issued/i);
+    expect(quote.phaseTwo?.introduction).not.toMatch(/confirm|before this draft is issued/i);
+    expect(quote.phaseTwo?.introduction).toMatch(/90 days from issue/i);
+    expect(quote.phaseTwo?.introduction).toMatch(/supplier price changes notified before order/i);
   });
 
   it("prices the six-item Essential scope and unchanged network exactly", () => {
@@ -95,7 +94,8 @@ describe("Essential English draft data", () => {
     }
     expect(text).toMatch(/six automations|6 automations/i);
     expect(text).toMatch(/90[- ]day/i);
-    expect(text).toMatch(/confirm.*price hold|price hold.*confirm/i);
+    expect(text).toMatch(/90 days from issue/i);
+    expect(text).toMatch(/supplier price changes notified before order/i);
   });
 });
 

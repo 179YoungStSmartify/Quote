@@ -1,9 +1,17 @@
 import { expect, test } from "@playwright/test";
 
-test("an unissued draft stays a draft past any hypothetical validity date", async ({ page }) => {
-  await page.clock.setFixedTime(new Date("2030-11-16T09:00:00+10:00"));
+test("issued quote clock shows active, expiring, then expired in Brisbane time", async ({ page }) => {
+  await page.clock.setFixedTime(new Date("2026-11-15T23:59:58+10:00"));
   await page.goto(".");
-  await expect(page.locator(".draft-banner")).toContainText("DRAFT");
   await expect(page.locator(".expiry-banner")).toHaveCount(0);
-  await expect(page.getByRole("alert")).toHaveCount(0);
+  await page.clock.setFixedTime(new Date("2026-11-16T00:00:00+10:00"));
+  await page.reload();
+  await expect(page.locator(".expiry-banner")).toContainText("expires soon");
+  await page.clock.setFixedTime(new Date("2026-11-23T00:00:00+10:00"));
+  await page.reload();
+  await expect(page.getByRole("alert")).toContainText("expired on 22/11/2026");
+  await page.clock.setFixedTime(new Date("2027-01-01T00:00:00+10:00"));
+  await page.reload();
+  await expect(page.getByRole("alert")).toContainText("expired");
+  await expect(page.locator(".draft-banner")).toHaveCount(0);
 });
