@@ -18,10 +18,10 @@ describe("existing client tablet scope", () => {
     const supplied = quote.sections.flatMap((section: { items: { name: string; quantity: number }[] }) => section.items).filter((item: { name: string }) => /display/i.test(item.name));
     expect(supplied).toHaveLength(3);
     expect(supplied.reduce((sum: number, item: { quantity: number }) => sum + item.quantity, 0)).toBe(3);
-    const totals = Object.fromEntries(quote.sections.map((section: { id: string; items: { quantity: number; unitCents: number }[] }) => [section.id, section.items.reduce((sum, item) => sum + item.quantity * item.unitCents, 0)]));
+    const totals = Object.fromEntries(quote.sections.map((section: { id: string; items: { quantity: number; unitCents: number }[]; discount: { quantity: number; unitCents: number } | null }) => [section.id, section.items.reduce((sum, item) => sum + item.quantity * item.unitCents, 0) + (section.discount ? section.discount.quantity * section.discount.unitCents : 0)]));
     expect(totals).toEqual({ "smart-home": 1235000, network: 127600 });
     expect(quote.terms.join(" ")).toContain("36 hours");
-    expect(quote.sections.find((section: { id: string }) => section.id === "smart-home").items.at(-1)).toMatchObject({ quantity: 21 });
+    expect(quote.sections.find((section: { id: string }) => section.id === "smart-home").items.at(-1)).toMatchObject({ quantity: 36 });
     expect(quote.scopeIntroduction).toContain("36 hours delivered: 15 complimentary and 21 billed");
   });
 });

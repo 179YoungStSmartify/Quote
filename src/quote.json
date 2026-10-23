@@ -53,8 +53,8 @@
           "unitCents": 6900
         },
         {
-          "name": "Installation, configuration and programming (hours; 36 delivered, 15 complimentary)",
-          "quantity": 21,
+          "name": "Installation configuration programming (36 hours delivered; 21 billed after complimentary hours)",
+          "quantity": 36,
           "unitCents": 18000
         }
       ],
@@ -63,8 +63,15 @@
         "label": "Hardware subtotal",
         "amountCents": 857000
       },
-      "discount": null,
-      "grossSubtotal": null,
+      "discount": {
+        "label": "Complimentary installation — 15 hours free",
+        "quantity": 15,
+        "unitCents": -18000
+      },
+      "grossSubtotal": {
+        "label": "Smart home subtotal before complimentary labour",
+        "amountCents": 1505000
+      },
       "finalLabel": "Smart home total"
     },
     {

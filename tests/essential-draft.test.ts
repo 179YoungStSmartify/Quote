@@ -32,13 +32,13 @@ describe("Essential English issued quote data", () => {
     expect(
       smart.items.find((item) => item.name.startsWith('4"')),
     ).toMatchObject({ quantity: 1, unitCents: 29900 });
-    expect(smart.items[7]).toMatchObject({ quantity: 21, unitCents: 18000 });
+    expect(smart.items[7]).toMatchObject({ quantity: 36, unitCents: 18000 });
     expect(smart.interimSubtotal).toMatchObject({
       afterItemCount: 7,
       amountCents: 857000,
     });
-    expect(smart.discount).toBeNull();
-    expect(smart.grossSubtotal).toBeNull();
+    expect(smart.discount).toMatchObject({ quantity: 15, unitCents: -18000 });
+    expect(smart.grossSubtotal).toMatchObject({ amountCents: 1505000 });
     expect(network.items).toEqual([
       {
         name: "UniFi Cloud Gateway Ultra (UCG-Ultra)",
@@ -72,7 +72,7 @@ describe("Essential English issued quote data", () => {
       quote.optionalAddons?.reduce((sum, item) => sum + item.amountCents, 0),
     ).not.toBe(quoteTotal());
     expect(quoteTotal()).toBe(1362600);
-    expect(smart.items.reduce((sum, item) => sum + item.quantity * item.unitCents, 0)).toBe(1235000);
+    expect(sectionTotal(smart)).toBe(1235000);
     expect(JSON.stringify(quote)).not.toMatch(
       /R&D|Accepted by|signature|[\u4e00-\u9fff]/i,
     );
@@ -102,12 +102,12 @@ describe("Essential English issued quote data", () => {
 
 function quoteTotal() {
   return quote.sections.reduce(
-    (sum, section) =>
-      sum +
-      section.items.reduce(
-        (subtotal, item) => subtotal + item.quantity * item.unitCents,
-        0,
-      ),
+    (sum, section) => sum + sectionTotal(section),
     0,
   );
+}
+
+function sectionTotal(section: (typeof quote.sections)[number]) {
+  return section.items.reduce((sum, item) => sum + item.quantity * item.unitCents, 0) +
+    (section.discount ? section.discount.quantity * section.discount.unitCents : 0);
 }
