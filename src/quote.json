@@ -3,12 +3,12 @@
   "quoteId": "PL-HZL-179YS-0002-v2",
   "preparedFor": "Hazal",
   "site": "179 Young St, Sunnybank QLD 4109",
-  "quoteDate": null,
-  "validUntil": null,
+  "quoteDate": "23/10/2026",
+  "validUntil": "22/11/2026",
   "preparedBy": "Perspective Living",
   "presentation": {
     "heroHeadline": "A thoughtful foundation for connected living.",
-    "heroSubheading": "Essential smart home and network — prepared for review, not yet issued.",
+    "heroSubheading": "Essential smart home and network, thoughtfully planned for your home.",
     "currencyNote": "All amounts are in AUD."
   },
   "scopeIntroduction": "Three displays: one 15.6-inch, one 10-inch and one 4-inch. Essential smart-home scope and separately priced network. Installation includes 36 hours delivered: 15 complimentary and 21 billed.",
@@ -148,8 +148,7 @@
   "hyperCare": "60 days of support and bug fixes within agreed scope for the system as delivered; new features are excluded.",
   "warranty": "Two years for hardware supplied by us. Client-supplied tablet is excluded from hardware warranty; configuration work remains covered by 60-day hyper-care.",
   "discountSummary": "You save",
-  "status": "draft",
-  "draftedOn": "21/10/2026",
+  "status": "issued",
   "optionalAddons": [
     {
       "id": "tablet",
@@ -178,7 +177,7 @@
     }
   ],
   "phaseTwo": {
-    "introduction": "Proposed Phase 2 menu, not included in the base total. Confirm the proposed 90-day price hold from issue and supplier-price-change terms before this draft is issued. Prices include hardware and software setup; the additional 4-inch display includes its area and scene dashboards. Installation beyond the hours already delivered, and new electrical or cabling work, are quoted separately.",
+    "introduction": "Phase 2 upgrade menu, not included in the base total. Prices are held for 90 days from issue, subject to supplier price changes notified before order. Prices include hardware and software setup; the additional 4-inch display includes its area and scene dashboards. Installation beyond the hours already delivered, and new electrical or cabling work, are quoted separately.",
     "items": [
       {
         "name": "Additional 4-inch in-wall display (light switch retrofit) × 1",
@@ -201,10 +200,5 @@
         "amountCents": 72000
       }
     ]
-  },
-  "draftChecks": [
-    "Before issue, explicitly confirm whether prices include GST; no tax treatment is represented here.",
-    "Confirm the 90-day Phase 2 price-hold terms before issue.",
-    "Confirm supplier-price-change carve-out before issue."
-  ]
+  }
 }

@@ -9,7 +9,7 @@ const money = (value: number) =>
     currency: quote.currency,
   }).format(value / 100);
 
-test("draft summary has no struck-through originals or savings", async ({
+test("issued summary has no struck-through originals or savings", async ({
   page,
 }) => {
   await page.goto("./");

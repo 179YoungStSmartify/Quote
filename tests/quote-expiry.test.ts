@@ -41,10 +41,10 @@ describe("quote expiry gate", () => {
     expect(isQuoteExpired("not a date", 0)).toBe(false);
   });
 
-  it("leaves validity unset for the unissued draft", () => {
-    expect(quote.status).toBe("draft");
-    expect(quote.quoteDate).toBeNull();
-    expect(quote.validUntil).toBeNull();
+  it("uses the issued quote validity dates", () => {
+    expect(quote.status).toBe("issued");
+    expect(quote.quoteDate).toBe("23/10/2026");
+    expect(quote.validUntil).toBe("22/11/2026");
   });
 });
 

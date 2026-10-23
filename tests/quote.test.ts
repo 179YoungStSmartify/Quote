@@ -8,7 +8,7 @@ const subtotal = (s: (typeof quote.sections)[number]) =>
   (s.discount ? line(s.discount) : 0);
 describe("Hazal quote", () => {
   it("uses the approved v2 item rates, quantities, subtotals, and total", () => {
-    expect(quote.status).toBe("draft");
+    expect(quote.status).toBe("issued");
     expect(quote.sections[0].items).toHaveLength(8);
     expect(quote.sections[0].items.slice(0, 7).reduce((a, x) => a + line(x), 0)).toBe(857000);
     expect(quote.sections[0].items.find(x => x.name.startsWith('4"'))).toMatchObject({quantity:1,unitCents:29900});
@@ -25,8 +25,8 @@ describe("Hazal quote", () => {
     expect(items.find((x) => x.name.startsWith("4"))?.quantity).toBe(1);
     expect(quote.quoteId).toBe("PL-HZL-179YS-0002-v2");
     expect(quote.preparedFor).toBe("Hazal");
-    expect(quote.validUntil).toBeNull();
-    expect(quote.quoteDate).toBeNull();
+    expect(quote.validUntil).toBe("22/11/2026");
+    expect(quote.quoteDate).toBe("23/10/2026");
   });
   it("includes 21 billed hours within 36 delivered, with no R&D", () => {
     expect(quote.sections[0].items[7]).toMatchObject({
@@ -106,7 +106,7 @@ describe("Hazal quote", () => {
     expect(data).toContain("60 days");
     expect(data).toContain("Two years for hardware supplied by us");
     expect(data).not.toMatch(restricted);
-    expect(data).toMatch(/GST.*confirm|confirm.*GST/i);
+    expect(data).not.toMatch(/GST|tax inclusive|tax exclusive/i);
   });
   it("sources hero and currency copy from quote.json in both renderers", () => {
     const app = readFileSync(
@@ -120,7 +120,7 @@ describe("Hazal quote", () => {
     expect(quote.presentation).toEqual({
       heroHeadline: "A thoughtful foundation for connected living.",
       heroSubheading:
-        "Essential smart home and network — prepared for review, not yet issued.",
+        "Essential smart home and network, thoughtfully planned for your home.",
       currencyNote: "All amounts are in AUD.",
     });
     expect(app).not.toContain("A thoughtful foundation for connected living");

@@ -33,18 +33,18 @@ it("PDF uses the React print page and preserves approved facts without signing",
         expect(page.text).toMatch(/Notes and terms\s+(?:All prices|Section A)/);
     }
     for (const fact of [
-      "DRAFT", "NOT ISSUED", "21/10/2026", "30 days from issue",
+      "23/10/2026", "22/11/2026", "30 days from issue",
       "PL-HZL-179YS-0002-v2", "Hazal", "$13,626.00", "$12,350.00",
       "$1,276.00", "$8,570.00", "$3,780.00", "21 hours",
       "36 hours", "15 complimentary", '15.6"', '10"', '4"',
       "6 automations", "NeoPlan3D", "$240.00", "$360.00",
-      "$299.00", "Phase 2", "GST", "90-day", "supplier",
+      "$299.00", "Phase 2", "90 days from issue", "supplier price changes notified before order",
       "A thoughtful foundation for connected living.",
-      "Essential smart home and network — prepared for review, not yet issued.",
+      "Essential smart home and network, thoughtfully planned for your home.",
       "All amounts are in AUD.",
     ])
       expect(text).toContain(fact);
-    expect(text).not.toMatch(/Before discount|Savings|\$0\.00|R&D|[\u4e00-\u9fff]/i);
+    expect(text).not.toMatch(/Before discount|Savings|\$0\.00|R&D|DRAFT|NOT ISSUED|GST|[\u4e00-\u9fff]/i);
     expect(text).not.toContain("$598.00");
     expect(text).not.toMatch(
       /Acceptance|Accepted by:|Signing integration|signature/i,
