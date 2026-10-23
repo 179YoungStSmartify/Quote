@@ -13,7 +13,7 @@ test("approved inclusion groups retain semantic sub-points on screen and paper",
     await page.evaluate(() => document.fonts.ready);
     const section = page.locator("#inclusions");
     for (const [name, count] of [
-      ["Dashboards", 2],
+      ["Dashboards", 3],
       ["Automations", 1],
     ] as const) {
       const card = section
@@ -47,7 +47,7 @@ test("approved inclusion groups retain semantic sub-points on screen and paper",
       await expect(
         section.getByText("Night-time sentry mode.", { exact: true }),
       ).toBeVisible();
-      await expect(section.locator("ul ul")).toHaveCount(3);
+      await expect(section.locator("ul ul")).toHaveCount(4);
     }
     await page.emulateMedia({ media: "screen" });
     await section.locator("h3, li, strong").evaluateAll((nodes) => {

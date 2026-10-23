@@ -63,7 +63,7 @@ describe("Essential English issued quote data", () => {
       ),
     ).toBe(127600);
     expect(quote.optionalAddons?.map((item) => item.amountCents)).toEqual([
-      24000, 36000,
+      36000,
     ]);
     expect(quote.phaseTwo?.items.map((item) => item.amountCents)).toEqual([
       29900, 74900, 39800, 36000, 72000,
@@ -72,6 +72,7 @@ describe("Essential English issued quote data", () => {
       quote.optionalAddons?.reduce((sum, item) => sum + item.amountCents, 0),
     ).not.toBe(quoteTotal());
     expect(quoteTotal()).toBe(1362600);
+    expect(smart.items.reduce((sum, item) => sum + item.quantity * item.unitCents, 0)).toBe(1235000);
     expect(JSON.stringify(quote)).not.toMatch(
       /R&D|Accepted by|signature|[\u4e00-\u9fff]/i,
     );
